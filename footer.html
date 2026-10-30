@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Footer
+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Pacifico&family=Barlow+Condensed:wght@800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bar-bg: #8379A8;      /* purple background */
+    --bar-fg: #F6F3FB;      /* off-white text/icons */
+    --bar-height: 57px;     /* matches screenshot (57px tall) */
+    --bar-font-size: 20px;  /* matches screenshot text size */
+    --bar-pad-x: 43px;      /* left/right gutter */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: "Figtree", "Inter", "Helvetica Neue", Arial, sans-serif; }
+
+  /* =========================================================
+     FOOTER
+     - 769px and up: desktop design (4 link columns + newsletter card, big wordmark)
+     - 768px and below: mobile design (newsletter card first, accordion links)
+     ========================================================= */
+  .site-footer {
+    padding: 66px 56px 22px;
+    background: #4E4086;
+    color: #FFFFFF;
+    font-family: "Figtree", "Inter", "Helvetica Neue", Arial, sans-serif;
+    
+  }
+  .site-footer *, .site-footer *::before, .site-footer *::after { box-sizing: border-box; }
+  .site-footer a { color: inherit; text-decoration: none; }
+  .site-footer ul { list-style: none; }
+ 
+  .site-footer__inner {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+ 
+  /* ---------- Top: links + newsletter ---------- */
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: 1fr 490px;
+    align-items: start;
+  }
+ 
+  /* Link columns */
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: 170px 158px 180px 180px;
+  }
+  .site-footer__heading {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+  .site-footer__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: #FFFFFF;
+    font: inherit;
+    text-align: left;
+    cursor: default;
+    pointer-events: none;             /* desktop: columns are always open */
+  }
+  .site-footer__icon { display: none; }
+ 
+  .site-footer__panel { display: block; }
+  .site-footer__links { padding-top: 21px; }
+  .site-footer__links li { line-height: 32px; }
+  .site-footer__links a {
+    font-size: 15px;
+    font-weight: 500;
+    transition: opacity .2s;
+  }
+  .site-footer__links a:hover { opacity: .75; }
+ 
+  /* ---------- Newsletter card ---------- */
+  .site-footer__news {
+    position: relative;
+    height: 200px;
+    margin-top: 6px;
+    padding: 24px 20px 0 213px;
+    border-radius: 4px;
+    background: #C3C2EA;
+    color: #4B3F85;
+  }
+  .site-footer__news-img {
+    position: absolute;
+    left: 8px;
+    bottom: 0;
+    width: 190px;
+    height: 236px;                    /* taller than the card: the pillow rises above it */
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  .site-footer__news-title {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 24px;
+  }
+  .site-footer__news-text {
+    margin-top: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 15px;
+  }
+ 
+  .site-footer__form {
+    display: flex;
+    align-items: center;
+    height: 42px;
+    margin-top: 19px;
+    padding: 0 12px 0 10px;
+    border: 2px solid #4B3F85;
+    border-radius: 3px;
+    background: #E4E3F7;
+  }
+  .site-footer__field-bar {
+    flex: none;
+    width: 2px;
+    height: 20px;
+    margin-right: 10px;
+    background: #4B3F85;
+  }
+  .site-footer__input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    background: none;
+    border: 0;
+    outline: 0;
+    color: #4B3F85;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .site-footer__input::placeholder { color: #4B3F85; opacity: 1; }
+  .site-footer__form:focus-within { box-shadow: 0 0 0 3px #8E84CC; }
+  .site-footer__submit {
+    display: inline-flex;
+    flex: none;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: #4B3F85;
+    cursor: pointer;
+  }
+  .site-footer__submit svg {
+    width: 21px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+ 
+  .site-footer__social {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .site-footer__social a { display: inline-flex; color: #4B3F85; transition: opacity .2s; }
+  .site-footer__social a:hover { opacity: .7; }
+  .site-footer__social svg { width: 16px; height: 16px; fill: currentColor; }
+  .site-footer__tag { margin-left: 8px; color: #4B3F85; }
+ 
+  /* ---------- Big wordmark ---------- */
+  .site-footer__wordmark {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 32px;
+  }
+ 
+  /* ---------- Legal line ---------- */
+  .site-footer__legal {
+    margin-top: 22px;
+    color: #C9C5EE;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+  .site-footer__legal a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .site-footer__legal a:hover { opacity: .8; }
+  .site-footer__dot { margin: 0 6px; }
+ 
+  /* ---------- Small desktop (1101px - 1287px): columns and newsletter card shrink to fit ---------- */
+  @media (min-width: 1101px) and (max-width: 1287px) {
+    .site-footer__top { grid-template-columns: minmax(0, 1fr) 450px; column-gap: 24px; }
+    .site-footer__nav { grid-template-columns: minmax(0, 170fr) minmax(0, 158fr) minmax(0, 180fr) minmax(0, 180fr); }
+    .site-footer__news { padding-left: 190px; }
+    .site-footer__news-img { width: 175px; }
+  }
+ 
+  /* ---------- Tablet (1100px and below): newsletter drops under the links ---------- */
+  @media (max-width: 1100px) {
+    .site-footer { padding: 56px 24px 22px; }
+    .site-footer__top { grid-template-columns: 1fr; }
+    .site-footer__nav { grid-template-columns: repeat(4, 1fr); }
+    .site-footer__news { width: 490px; max-width: 100%; margin-top: 80px; }
+  }
+ 
+  /* ---------- Mobile design (768px and below) ---------- */
+  @media (max-width: 768px) {
+    .site-footer { padding: 48px 20px 28px; }
+ 
+    .site-footer__top { display: flex; flex-direction: column; align-items: stretch; }
+    .site-footer__news { order: -1; }                 /* card first, links after */
+ 
+    /* Newsletter card */
+    .site-footer__news {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: auto;
+      min-height: 452px;
+      margin-top: 0;
+      padding: 26px 24px 0;
+      text-align: center;
+    }
+    .site-footer__news-title { font-size: 18px; line-height: 24px; }
+    .site-footer__news-text { margin-top: 2px; line-height: 16px; }
+    .site-footer__form { width: 100%; height: 48px; margin-top: 28px; padding: 0 14px 0 8px; }
+    .site-footer__social { margin-top: 18px; justify-content: center; }
+    .site-footer__news-img {
+      position: static;
+      width: 225px;
+      height: 232px;
+      margin-top: auto;
+    }
+ 
+    /* Accordion links */
+    .site-footer__nav { display: block; margin-top: 20px; }
+    .site-footer__col { border-bottom: 1.5px solid #6E65AD; }
+ 
+    .site-footer__heading { font-size: 18px; line-height: 24px; }
+    .site-footer__toggle {
+      height: 56px;
+      padding-right: 2px;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .site-footer__toggle:focus-visible { outline: 2px solid #C3C2EA; outline-offset: 2px; }
+ 
+    .site-footer__icon {
+      display: block;
+      flex: none;
+      width: 14px;
+      height: 14px;
+      stroke: #FFFFFF;
+      stroke-width: 1.8;
+      fill: none;
+    }
+    .site-footer__icon .v { transform-origin: center; transition: transform .25s ease, opacity .25s ease; }
+    .site-footer__col.is-open .site-footer__icon .v { transform: scaleY(0); opacity: 0; }
+ 
+    .site-footer__panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .3s ease;
+    }
+    .site-footer__col.is-open .site-footer__panel { grid-template-rows: 1fr; }
+    .site-footer__list-wrap {
+      min-height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: visibility 0s linear .3s;
+    }
+    .site-footer__col.is-open .site-footer__list-wrap { visibility: visible; transition-delay: 0s; }
+ 
+    .site-footer__links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, auto);
+      grid-auto-flow: column;
+      column-gap: 8px;
+      padding: 0 0 21px;
+    }
+    .site-footer__links a { font-size: 16px; }
+ 
+    .site-footer__wordmark { margin-top: 40px; }
+ 
+    .site-footer__legal {
+      margin-top: 30px;
+      padding: 0 8px;
+      font-size: 13px;
+      line-height: 27px;
+      text-align: center;
+    }
+    .site-footer__legal > a,
+    .site-footer__legal > span { white-space: nowrap; }
+    .site-footer__legal > span:first-child { display: block; }          /* copyright on its own line */
+    .site-footer__legal > .site-footer__dot:nth-child(2) { display: none; }
+  }
+
+  
+</style>
+</head>
+<body>
+
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+ 
+    <div class="site-footer__top">
+ 
+      <!-- Link columns (accordion on mobile) -->
+      <nav class="site-footer__nav" aria-label="Footer">
+ 
+        <div class="site-footer__col is-open">
+          <h3 class="site-footer__heading">
+            <button class="site-footer__toggle" type="button" aria-expanded="true" aria-controls="footer-shop">
+              Shop
+              <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true"><line x1="0" y1="7" x2="14" y2="7"/><line class="v" x1="7" y1="0" x2="7" y2="14"/></svg>
+            </button>
+          </h3>
+          <div class="site-footer__panel" id="footer-shop">
+            <div class="site-footer__list-wrap">
+              <ul class="site-footer__links">
+                <li><a href="#">Pillows</a></li>
+                <li><a href="#">Bedding</a></li>
+                <li><a href="#">Bath &amp; Robe</a></li>
+                <li><a href="#">Accessories</a></li>
+                <li><a href="#">Bundles</a></li>
+                <li><a href="#">Shop All</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="site-footer__col">
+          <h3 class="site-footer__heading">
+            <button class="site-footer__toggle" type="button" aria-expanded="false" aria-controls="footer-learn">
+              Learn
+              <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true"><line x1="0" y1="7" x2="14" y2="7"/><line class="v" x1="7" y1="0" x2="7" y2="14"/></svg>
+            </button>
+          </h3>
+          <div class="site-footer__panel" id="footer-learn">
+            <div class="site-footer__list-wrap">
+              <ul class="site-footer__links">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">News</a></li>
+                <li><a href="#">Wholesale</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="site-footer__col">
+          <h3 class="site-footer__heading">
+            <button class="site-footer__toggle" type="button" aria-expanded="false" aria-controls="footer-community">
+              Community
+              <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true"><line x1="0" y1="7" x2="14" y2="7"/><line class="v" x1="7" y1="0" x2="7" y2="14"/></svg>
+            </button>
+          </h3>
+          <div class="site-footer__panel" id="footer-community">
+            <div class="site-footer__list-wrap">
+              <ul class="site-footer__links">
+                <li><a href="#">Ambassadors</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Tiktok</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="site-footer__col">
+          <h3 class="site-footer__heading">
+            <button class="site-footer__toggle" type="button" aria-expanded="false" aria-controls="footer-support">
+              Support
+              <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true"><line x1="0" y1="7" x2="14" y2="7"/><line class="v" x1="7" y1="0" x2="7" y2="14"/></svg>
+            </button>
+          </h3>
+          <div class="site-footer__panel" id="footer-support">
+            <div class="site-footer__list-wrap">
+              <ul class="site-footer__links">
+                <li><a href="#">Tracking</a></li>
+                <li><a href="#">Lifetime Warranty</a></li>
+                <li><a href="#">Shipping &amp; Returns</a></li>
+                <li><a href="#">Account</a></li>
+                <li><a href="#">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+ 
+      </nav>
+ 
+      <!-- Newsletter card -->
+      <section class="site-footer__news" aria-labelledby="footer-news-title">
+        <!-- Replace with your cut-out photo (transparent PNG / WebP) -->
+        <img class="site-footer__news-img" src="images/footer-newsletter.png" alt="" loading="lazy" onerror="this.style.display='none'">
+ 
+        <h2 class="site-footer__news-title" id="footer-news-title">Join the Mellow Community</h2>
+        <p class="site-footer__news-text">Get first access to new drops,<br>restocks, and sleep tips.</p>
+ 
+        <form class="site-footer__form" action="#" method="post">
+          <span class="site-footer__field-bar" aria-hidden="true"></span>
+          <input class="site-footer__input" type="email" name="email" placeholder="Your email address" aria-label="Email address" required>
+          <button class="site-footer__submit" type="submit" aria-label="Subscribe">
+            <svg viewBox="0 0 21 14" aria-hidden="true"><line x1="1" y1="7" x2="19.5" y2="7"/><polyline points="13.5 1 19.5 7 13.5 13"/></svg>
+          </button>
+        </form>
+ 
+        <div class="site-footer__social">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 1.8A4 4 0 0 0 3.8 7.8v8.4a4 4 0 0 0 4 4h8.4a4 4 0 0 0 4-4V7.8a4 4 0 0 0-4-4H7.8Zm8.9 1.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 6.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2Zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Z"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7h1.6V3.8s-1.3-.2-2.6-.2c-2.6 0-4.3 1.6-4.3 4.4v2.5H7v3.3h3V22h3.5Z"/></svg>
+          </a>
+          <a href="#" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M16.6 2h-3.2v13.3a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1V9.3a6 6 0 1 0 5.2 5.9V8.6a7.2 7.2 0 0 0 4.2 1.4V6.8a4.2 4.2 0 0 1-4.2-4.8Z"/></svg>
+          </a>
+          <a class="site-footer__tag" href="#">#MellowSleep</a>
+        </div>
+      </section>
+ 
+    </div>
+ 
+    <!-- Big wordmark (replace with your logo SVG if you have one) -->
+    <svg class="site-footer__wordmark" viewBox="0 0 1188 262" role="img" aria-label="mellow">
+      <text x="0" y="256" textLength="1188" lengthAdjust="spacingAndGlyphs" font-family="Figtree, Arial, sans-serif" font-weight="800" font-size="346" fill="#8479AA">mel<tspan fill="#675B9B">l</tspan>ow</text>
+    </svg>
+ 
+    <!-- Legal line -->
+    <p class="site-footer__legal">
+      <span>© 2026, Mellow LLC. Site by <a href="#">Otherhalf</a></span>
+      <span class="site-footer__dot" aria-hidden="true">•</span>
+      <a href="#">Privacy Policy</a>
+      <span class="site-footer__dot" aria-hidden="true">•</span>
+      <a href="#">Shipping Policy</a>
+      <span class="site-footer__dot" aria-hidden="true">•</span>
+      <a href="#">Terms of Service</a>
+      <span class="site-footer__dot" aria-hidden="true">•</span>
+      <a href="#">Data Disclosure</a>
+    </p>
+ 
+  </div>
+</footer>

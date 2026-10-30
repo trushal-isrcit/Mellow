@@ -1,0 +1,4731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CloudAlign™ Pillow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p: #4f3f85;
+            --pl: #e1e0f5;
+            --bd: #b9b5e6;
+            --bg: #faf7f4;
+            --tx: #2b2540;
+            --mut: #9a95b8
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: Figtree, system-ui, sans-serif;
+            color: var(--tx);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased
+        }
+
+        /* sticky page section*/
+        button,
+        select {
+            font: inherit;
+            color: inherit
+        }
+
+        button {
+            cursor: pointer;
+            background: none;
+            border: 0
+        }
+
+        .page {
+            background: linear-gradient(#ebe9fa 0, #faf7f4 200px);
+            padding: 50px 0 40px
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto
+        }
+
+        .hide-d {
+            display: block
+        }
+
+        .hide-m {
+            display: none
+        }
+
+        /* gallery */
+        .gallery {
+            position: relative
+        }
+
+        .thumbs {
+            display: none
+        }
+
+        .stage {
+            position: relative;
+            height: 275px;
+            background: #f1e6e4;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .stage svg {
+            width: 78%;
+            max-width: 560px;
+            filter: drop-shadow(0 18px 18px rgba(80, 50, 60, .12))
+        }
+
+        .stage .alt {
+            display: none;
+            font-size: 22px;
+            color: var(--p);
+            font-weight: 600
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #fff;
+            color: var(--p);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 4px #0002
+        }
+
+        .arrow.l {
+            left: 10px
+        }
+
+        .arrow.r {
+            right: 10px
+        }
+
+        .tag-m {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #faf7f4;
+            color: var(--p);
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 2px;
+            white-space: nowrap
+        }
+
+        .badge {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--p);
+            background: #faf7f4;
+            font-weight: 500
+        }
+
+        .badge span {
+            text-align: center;
+            line-height: 1.15
+        }
+
+        .badge svg {
+            width: 16px;
+            height: 30px;
+            flex: none;
+            fill: var(--p)
+        }
+
+        .badge svg.f {
+            transform: scaleX(-1)
+        }
+
+        .badge.m {
+            right: 12px;
+            bottom: 12px;
+            font-size: 9px;
+            padding: 4px 6px;
+            background: transparent
+        }
+
+        .badge.d {
+            display: none
+        }
+
+        .tags {
+            display: none
+        }
+
+        /* info */
+        .info {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 18px 0
+        }
+
+        .info>* {
+            order: var(--o, 0)
+        }
+
+        .stars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--p)
+        }
+
+        .stars i {
+            font-style: normal;
+            letter-spacing: 1px;
+            font-size: 11px
+        }
+
+        .stars a {
+            text-decoration: underline;
+            color: var(--p)
+        }
+
+        h1 {
+            font-size: 23px;
+            color: var(--p);
+            font-weight: 700;
+            margin-top: 10px;
+            line-height: 1.2
+        }
+
+        .price {
+            margin-top: 12px;
+            color: var(--p);
+            font-weight: 600;
+            font-size: 16px
+        }
+
+        .price s {
+            color: var(--mut);
+            margin-left: 8px;
+            font-weight: 500
+        }
+
+        .desc {
+            margin: 12px 0 10px;
+            font-size: 16px;
+            line-height: 1.25
+        }
+
+        .desc .dd {
+            display: none
+        }
+
+        .lbl {
+            font-size: 16px;
+            margin: 12px 0 8px
+        }
+
+        .lbl b {
+            font-weight: 700
+        }
+
+        .swatches {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 3px
+        }
+
+        .sw {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            position: relative
+        }
+
+        .sw.on {
+            outline: 1.5px solid var(--p);
+            outline-offset: 3px
+        }
+
+        .sw[data-c="White"] {
+            border-color: #d9d6e8
+        }
+
+        .hl {
+            background: var(--pl);
+            padding: 14px 16px;
+            margin: 14px 0 8px;
+            display: grid;
+            gap: 12px;
+            font-size: 12px;
+            font-weight: 500
+        }
+
+        .hl div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            order: var(--m)
+        }
+
+        .hl svg {
+            width: 14px;
+            height: 14px;
+            fill: #2b2540;
+            flex: none
+        }
+
+        .hl em {
+            font-style: normal;
+            line-height: 1.1
+        }
+
+        .rev {
+            order: var(--o)
+        }
+
+        .vids {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin: 0 -18px;
+            padding: 0 18px
+        }
+
+        .vid {
+            flex: none;
+            width: 106px;
+            height: 140px;
+            border-radius: 2px;
+            position: relative;
+            background: var(--g)
+        }
+
+        .vid b {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.5px solid var(--p);
+            color: var(--p);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .sec-h {
+            font-size: 17px;
+            color: var(--p);
+            font-weight: 700;
+            margin: 22px 0 12px
+        }
+
+        .sizeRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 20px 0 8px
+        }
+
+        .sizeRow .lbl {
+            margin: 0
+        }
+
+        .sizeRow a {
+            color: var(--p);
+            font-size: 13px;
+            text-decoration: underline;
+            font-weight: 500
+        }
+
+        .sizes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .sz {
+            height: 50px;
+            border: 2px solid var(--bd);
+            color: var(--p);
+            font-weight: 600;
+            font-size: 16px;
+            background: #fff0
+        }
+
+        .sz.on {
+            background: var(--p);
+            color: #fff;
+            border-color: var(--p)
+        }
+
+        .bundles {
+            display: grid;
+            gap: 16px
+        }
+
+        .bd {
+            position: relative;
+            border: 2px solid var(--bd);
+            background: #fff0
+        }
+
+        .bd.on {
+            border-color: var(--p)
+        }
+
+        .bd-h {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            gap: 10px
+        }
+
+        .rad {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--p);
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 6px
+        }
+
+        .bd.on .rad::after {
+            content: "";
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--p)
+        }
+
+        .bd-l {
+            display: flex;
+            gap: 6px;
+            flex: 1
+        }
+
+        .bd-t {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            color: var(--p);
+            font-weight: 600;
+            font-size: 17px
+        }
+
+        .bd-t small {
+            background: var(--bd);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 2px;
+            background: #d8d5f2;
+            color: var(--p)
+        }
+
+        .bd.on .bd-t small {
+            background: #8a7fc4;
+            color: #fff
+        }
+
+        .bd-s {
+            font-size: 14px;
+            color: var(--tx);
+            margin-top: 8px;
+            width: 100%;
+            font-weight: 500
+        }
+
+        .bd-p {
+            text-align: right;
+            color: var(--p);
+            font-weight: 700;
+            font-size: 19px;
+            white-space: nowrap
+        }
+
+        .bd-p s {
+            display: block;
+            font-weight: 500;
+            font-size: 17px;
+            color: #6d63a3;
+            margin-top: 2px
+        }
+
+        .ribbon {
+            position: absolute;
+            right: 12px;
+            top: -12px;
+            background: var(--p);
+            color: #fff;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 2px;
+            font-weight: 500
+        }
+
+        .bd-x {
+            display: none;
+            border-top: 2px solid var(--bd);
+            background: #ebe9fa66
+        }
+
+        .bd.on .bd-x {
+            display: block
+        }
+
+        .pick {
+            padding: 14px 16px 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 14px;
+            font-size: 14px;
+            font-weight: 500
+        }
+
+        .pick>span {
+            grid-column: span 1
+        }
+
+        .sel {
+            position: relative;
+            background: #fff;
+            border: 2px solid var(--bd);
+            height: 42px;
+            display: flex;
+            align-items: center
+        }
+
+        .sel select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: transparent;
+            padding: 0 34px 0 14px;
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--p);
+            cursor: pointer
+        }
+
+        .sel.c select {
+            padding-left: 42px
+        }
+
+        .sel::after {
+            content: "";
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            width: 7px;
+            height: 7px;
+            border: solid var(--p);
+            border-width: 0 2px 2px 0;
+            transform: translateY(-70%) rotate(45deg);
+            pointer-events: none
+        }
+
+        .dot {
+            position: absolute;
+            left: 14px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #d9d6e8;
+            pointer-events: none
+        }
+
+        .addon {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-top: 2px solid var(--p);
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            background: #fff0
+        }
+
+        .addon label {
+            flex: 1;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            cursor: pointer
+        }
+
+        .addon div {
+            text-align: right;
+            font-weight: 700;
+            font-size: 13px
+        }
+
+        .addon s {
+            display: block;
+            color: var(--mut);
+            font-weight: 500
+        }
+
+        .chk {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--p);
+            border-radius: 3px;
+            background: #fff;
+            flex: none;
+            cursor: pointer;
+            display: grid;
+            place-items: center
+        }
+
+        .chk:checked {
+            background: var(--p)
+        }
+
+        .chk:checked::after {
+            content: "";
+            width: 6px;
+            height: 11px;
+            border: solid #fff;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg) translate(-1px, -1px)
+        }
+
+        .cta {
+            display: block;
+            width: 100%;
+            height: 52px;
+            background: var(--p);
+            color: #fff;
+            font-weight: 600;
+            font-size: 17px;
+            margin-top: 22px
+        }
+
+        .cta s {
+            color: #a79fd0;
+            margin-left: 6px
+        }
+
+        .note {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 16px
+        }
+
+        .note a {
+            color: var(--p);
+            text-decoration: underline
+        }
+
+        .trial {
+            background: var(--pl);
+            text-align: center;
+            padding: 16px;
+            margin-top: 20px;
+            display: grid;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500
+        }
+
+        .acc button {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: var(--p);
+            font-weight: 700;
+            font-size: 18px;
+            padding: 18px 0 12px;
+            border-bottom: 2px solid var(--bd);
+            text-align: left
+        }
+
+        .acc p {
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 12px 0
+        }
+
+        .acc.open p {
+            display: block
+        }
+
+        .acc button i {
+            font-style: normal;
+            font-size: 24px;
+            line-height: .8
+        }
+
+        .testi {
+            background: #f1e6e4;
+            text-align: center;
+            padding: 30px 18px 24px;
+            margin-top: 22px
+        }
+
+        .testi q {
+            display: block;
+            quotes: none;
+            font-size: 17px;
+            line-height: 1.3
+        }
+
+        .testi h4 {
+            color: var(--p);
+            font-size: 18px;
+            margin-top: 22px
+        }
+
+        .testi p {
+            color: var(--p);
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 500
+        }
+
+        .dots {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 22px
+        }
+
+        .dots i {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            border: 1.5px solid var(--p);
+            cursor: pointer
+        }
+
+        .dots i.on {
+            background: var(--p)
+        }
+
+        .fbt-l {
+            display: none
+        }
+
+        .fbt-c {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin: 0 -18px;
+            padding: 0 18px
+        }
+
+        .fc {
+            flex: none;
+            width: 145px
+        }
+
+        .fc .im {
+            height: 180px;
+            position: relative;
+            background: var(--g)
+        }
+
+        .fc .im .chk {
+            position: absolute;
+            right: 6px;
+            bottom: 6px
+        }
+
+        .fc .rt {
+            font-size: 11px;
+            color: var(--p);
+            margin: 12px 0 6px;
+            display: flex;
+            gap: 6px
+        }
+
+        .fc h5 {
+            color: var(--p);
+            font-size: 17px;
+            line-height: 1.15;
+            min-height: 60px
+        }
+
+        .fc .mini {
+            display: flex;
+            gap: 5px;
+            margin: 8px 0 14px
+        }
+
+        .fc .mini i {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%
+        }
+
+        .fc .sel {
+            height: 40px
+        }
+
+        .sel-s select {
+            font-size: 14px;
+            padding-left: 10px
+        }
+
+        /* desktop */
+        @media(min-width:1024px) {
+            .hide-d {
+                display: none
+            }
+
+            .hide-m {
+                display: block
+            }
+
+            .page {
+                padding: 124px 24px 40px
+            }
+
+            .wrap {
+                max-width: 1432px;
+                display: grid;
+                grid-template-columns: 66px minmax(0, 1fr) 445px;
+                gap: 16px;
+                margin: 0 auto
+            }
+
+            .wrap {
+                column-gap: 16px
+            }
+
+            .gallery {
+                display: contents
+            }
+
+            .thumbs {
+                display: flex;
+                flex-direction: column;
+                gap: 12px
+            }
+
+            .th {
+                width: 66px;
+                height: 66px;
+                border: 2px solid transparent;
+                background: var(--g);
+                flex: none
+            }
+
+            .th.on {
+                border-color: var(--p)
+            }
+
+            .stage {
+                height: auto;
+                aspect-ratio: 1/1;
+                border-radius: 2px;
+                margin-right: 55px
+            }
+
+            .stage svg {
+                width: 72%
+            }
+
+            .arrow,
+            .tag-m,
+            .badge.m {
+                display: none
+            }
+
+            .badge.d {
+                display: flex;
+                left: 24px;
+                top: 24px;
+                font-size: 20px;
+                padding: 16px 14px 16px 12px;
+                gap: 6px
+            }
+
+            .badge.d svg {
+                width: 30px;
+                height: 56px
+            }
+
+            .tags {
+                display: flex;
+                gap: 16px;
+                position: absolute;
+                bottom: 24px;
+                left: 0;
+                right: 0;
+                justify-content: center
+            }
+
+            .tags span {
+                background: #faf7f4;
+                color: var(--p);
+                font-size: 16px;
+                padding: 10px 12px;
+                font-weight: 500
+            }
+
+            .gwrap {
+                position: sticky;
+                top: 24px;
+                align-self: start;
+                grid-column: 2;
+                grid-row: 1
+            }
+
+            .thumbs {
+                position: sticky;
+                top: 24px;
+                align-self: start
+            }
+
+            .info {
+                padding: 0;
+                grid-column: 3;
+                grid-row: 1
+            }
+
+            .thumbs {
+                grid-column: 1;
+                grid-row: 1
+            }
+
+            .desc .dm {
+                display: none
+            }
+
+            .desc .dd {
+                display: inline
+            }
+
+            .desc {
+                margin: 12px 0 18px;
+                font-size: 19px;
+                line-height: 1.15
+            }
+
+            h1 {
+                font-size: 34px;
+                margin-top: 12px
+            }
+
+            .price {
+                font-size: 19px
+            }
+
+            .stars {
+                font-size: 13px
+            }
+
+            .hl {
+                grid-template-columns: auto 1fr;
+                gap: 16px 20px;
+                padding: 18px 18px 14px;
+                font-size: 15px;
+                margin: 18px 0px;
+            }
+
+            .hl div {
+                order: 0
+            }
+
+            .hl {
+                grid-template-columns: 1fr 1.15fr
+            }
+
+            .lbl {
+                font-size: 18px
+            }
+
+            .swatches {
+                gap: 8px
+            }
+
+            .sw {
+                width: 30px;
+                height: 30px;
+            }
+
+            .vids {
+                margin: 0;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .vid {
+                flex: 1;
+                width: auto;
+                height: 160px
+            }
+
+            .fbt-c {
+                display: none
+            }
+
+            .fbt-l {
+                display: block
+            }
+
+            .fl {
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+                padding: 14px 0;
+                border-bottom: 2px solid var(--bd)
+            }
+
+            .fl:last-of-type {
+                border: 0
+            }
+
+            .fl b {
+                display: block;
+                color: var(--p);
+                font-weight: 500;
+                font-size: 18px
+            }
+
+            .fl span {
+                font-size: 15px;
+                font-weight: 500
+            }
+
+            .fl s {
+                color: var(--mut);
+                margin-left: 6px
+            }
+
+            .sec-h {
+                margin: 20px 0 14px;
+                font-size: 20px
+            }
+
+            .testi q {
+                font-size: 19px
+            }
+
+            .testi {
+                margin-top: 24px
+            }
+        }
+
+        /* =========================================================
+     MARQUEE (press logos strip)
+     --u is the size unit: 1px on mobile, 0.91px on desktop (the desktop
+     design uses slightly smaller logos), so every logo scales together.
+     ========================================================= */
+        .marquee {
+            --u: 1px;
+            display: flex;
+            align-items: center;
+            height: calc(64 * var(--u));
+            /* 64px on mobile */
+            overflow: hidden;
+            background: #4B3F85;
+            color: #FAF6F3;
+        }
+
+        .marquee__track {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 30s linear infinite;
+        }
+
+        .marquee:hover .marquee__track {
+            animation-play-state: paused;
+        }
+
+        .marquee__group {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            gap: calc(54 * var(--u));
+            padding-right: calc(54 * var(--u));
+            /* same as gap, so the loop is seamless */
+        }
+
+        .marquee__logo {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            color: #FAF6F3;
+            white-space: nowrap;
+        }
+
+        /* When you add real logo files: <span class="marquee__logo"><img src="..." alt="..."></span> */
+        .marquee__logo img {
+            display: block;
+            height: calc(32 * var(--u));
+            width: auto;
+        }
+
+        /* Text/shape stand-ins for the logos (replace with the real SVG/PNG files) */
+        .logo--us {
+            position: relative;
+            font-size: calc(42 * var(--u));
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            padding-right: calc(2 * var(--u));
+        }
+
+        .logo--us small {
+            position: absolute;
+            top: calc(3 * var(--u));
+            right: calc(-2 * var(--u));
+            font-size: calc(5 * var(--u));
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            line-height: 1;
+            color: #A9A0D6;
+        }
+
+        .logo--usa {
+            gap: calc(4 * var(--u));
+        }
+
+        .logo--usa i {
+            flex: none;
+            width: calc(26 * var(--u));
+            height: calc(26 * var(--u));
+            border-radius: 50%;
+            background: #FAF6F3;
+        }
+
+        .logo--usa span {
+            font-size: calc(13 * var(--u));
+            font-weight: 800;
+            line-height: calc(12 * var(--u));
+            letter-spacing: 0.01em;
+        }
+
+        .logo--scary {
+            padding: 0 calc(4 * var(--u));
+            font-family: "Pacifico", "Brush Script MT", cursive;
+            font-size: calc(17 * var(--u));
+            line-height: 0.85;
+            text-align: center;
+            transform: rotate(-8deg);
+        }
+
+        .logo--rd {
+            flex-direction: column;
+            align-items: center;
+            font-family: Georgia, "Times New Roman", serif;
+            letter-spacing: -0.03em;
+        }
+
+        .logo--rd small {
+            margin-bottom: calc(-3 * var(--u));
+            font-size: calc(10.5 * var(--u));
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .logo--rd span {
+            font-size: calc(24 * var(--u));
+            font-weight: 400;
+            line-height: 0.8;
+        }
+
+        .logo--forbes {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: calc(19 * var(--u));
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo--life {
+            font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+            font-size: calc(19 * var(--u));
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .logo--pop {
+            font-size: calc(15 * var(--u));
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+        }
+
+        .logo--oprah {
+            align-items: baseline;
+            gap: calc(3 * var(--u));
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .logo--oprah em {
+            font-size: calc(17 * var(--u));
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .logo--oprah span {
+            font-size: calc(14 * var(--u));
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        /* Desktop design: 57px tall strip, slightly smaller logos and spacing */
+        @media (min-width: 769px) {
+            .marquee {
+                --u: 0.91px;
+                height: 57px;
+            }
+        }
+
+        @keyframes marquee-scroll {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .marquee__track {
+                animation: none;
+            }
+        }
+
+
+        /* zones section */
+        .zones {
+            background: #f3eae8;
+            container-type: inline-size
+        }
+
+        .zi {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 51px 0 48px
+        }
+
+        .zones h2 {
+            font-size: 31px;
+            line-height: 34.5px;
+            font-weight: 700;
+            color: var(--p);
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .zones .sub {
+            font-size: 14px;
+            line-height: 18px;
+            text-align: center;
+            margin: 18px 0 9px
+        }
+
+        .ph {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e3def2, #d2cbe9)
+        }
+
+        .ph::before {
+            content: attr(data-label);
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 600;
+            color: var(--p);
+            white-space: pre-line
+        }
+
+        .ph::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top right, transparent calc(50% - .5px), rgba(79, 63, 133, .22) 50%, transparent calc(50% + .5px)), linear-gradient(to bottom right, transparent calc(50% - .5px), rgba(79, 63, 133, .22) 50%, transparent calc(50% + .5px))
+        }
+
+        .ph img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2
+        }
+
+        .pic {
+            position: relative;
+            display: block;
+            width: 94.67%;
+            margin-left: 2.67%;
+            aspect-ratio: 355/245
+        }
+
+        .pic.ph {
+            overflow: visible;
+            background: none
+        }
+
+        .pic.ph::after {
+            inset: 6% 1%;
+            background: #fff;
+            border: 2px dashed #c3bbe3;
+            border-radius: 34%/40%
+        }
+
+        .pic picture,
+        .pic img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 2
+        }
+
+        .mk {
+            position: absolute;
+            z-index: 3;
+            left: var(--mx);
+            top: var(--my);
+            width: var(--mw);
+            aspect-ratio: 1;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: #8478b5;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .mk.a {
+            background: var(--p);
+            box-shadow: 0 0 0 2px #f3eae8, 0 0 0 3.5px var(--p)
+        }
+
+        .zl {
+            padding: 22px 20px 0
+        }
+
+        .zl article {
+            margin-bottom: 19px
+        }
+
+        .zl article:last-child {
+            margin-bottom: 0
+        }
+
+        .zl h3 {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #8478b5
+        }
+
+        .zl article:first-child h3 {
+            color: var(--p)
+        }
+
+        .zl p {
+            font-size: 16px;
+            line-height: 21px;
+            margin-top: 3px;
+            white-space: nowrap
+        }
+
+        .dr {
+            margin: 30px 20px 0;
+            background: #fbf7f4;
+            padding: 16px 16px 19px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start
+        }
+
+        .vbox {
+            position: relative;
+            width: 144px;
+            height: 216px;
+            flex: none
+        }
+
+        #mute {
+            z-index: 3
+        }
+
+        #mute {
+            position: absolute;
+            right: 11px;
+            bottom: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--p);
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #mute svg {
+            width: 50%;
+            height: 50%;
+            fill: #fff
+        }
+
+        .dr q {
+            display: block;
+            quotes: none;
+            font-size: 16px;
+            line-height: 18px;
+            text-indent: -.4em;
+            white-space: nowrap;
+            margin-top: 1px
+        }
+
+        .dr h4 {
+            font-size: 17px;
+            line-height: 20px;
+            color: var(--p);
+            margin-top: 17px;
+            font-weight: 600
+        }
+
+        .dr small {
+            display: block;
+            font-size: 14px;
+            line-height: 14px;
+            margin-top: 7px;
+            color: var(--p);
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        br.d {
+            display: none
+        }
+
+        @media(min-width:1024px) {
+            br.d {
+                display: inline
+            }
+
+            br.m {
+                display: none
+            }
+
+            .zi {
+                --s: calc(100cqw/1440);
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                position: relative;
+                height: calc(720*var(--s))
+            }
+
+            .zones h2 {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: calc(79*var(--s));
+                font-size: calc(37*var(--s));
+                line-height: calc(37*var(--s))
+            }
+
+            .zones .sub {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: calc(133*var(--s));
+                margin: 0;
+                font-size: calc(17*var(--s));
+                line-height: calc(17*var(--s))
+            }
+
+            .pic {
+                aspect-ratio: 1353/793;
+                position: absolute;
+                left: calc(380*var(--s));
+                top: calc(221*var(--s));
+                width: calc(676.5*var(--s));
+                margin: 0
+            }
+
+            .mk {
+                left: var(--dx);
+                top: var(--dy);
+                width: var(--dw);
+                font-size: calc(15.6*var(--s))
+            }
+
+            .mk.a {
+                box-shadow: 0 0 0 calc(1.7*var(--s)) #f3eae8, 0 0 0 calc(3.9*var(--s)) var(--p)
+            }
+
+            .zl {
+                position: absolute;
+                left: calc(56*var(--s));
+                top: calc(233*var(--s));
+                padding: 0
+            }
+
+            .zl article {
+                margin-bottom: calc(42*var(--s))
+            }
+
+            .zl article:last-child {
+                margin-bottom: 0
+            }
+
+            .zl h3 {
+                font-size: calc(24.6*var(--s));
+                line-height: calc(24.6*var(--s))
+            }
+
+            .zl p {
+                font-size: calc(17*var(--s));
+                line-height: calc(19*var(--s));
+                margin-top: calc(9*var(--s))
+            }
+
+            .dr {
+                position: absolute;
+                left: calc(1144*var(--s));
+                top: calc(131.4*var(--s));
+                width: calc(239.2*var(--s));
+                height: calc(508.7*var(--s));
+                margin: 0;
+                padding: calc(15.7*var(--s));
+                display: block
+            }
+
+            .vbox {
+                width: calc(208*var(--s));
+                height: calc(312*var(--s))
+            }
+
+            #mute {
+                width: calc(32.4*var(--s));
+                height: calc(32.4*var(--s));
+                right: calc(11.7*var(--s));
+                bottom: calc(12.3*var(--s))
+            }
+
+            .dr q {
+                font-size: calc(17*var(--s));
+                line-height: calc(19*var(--s));
+                margin-top: calc(15.7*var(--s))
+            }
+
+            .dr h4 {
+                font-size: calc(18*var(--s));
+                line-height: calc(18*var(--s));
+                margin-top: calc(13.5*var(--s))
+            }
+
+            .dr small {
+                font-size: calc(14.5*var(--s));
+                line-height: calc(15*var(--s));
+                margin-top: calc(8*var(--s))
+            }
+        }
+
+        /* ergo section */
+        .ergo {
+            background: #fbf7f4;
+            container-type: inline-size
+        }
+
+        .ei {
+            padding: 48.5px 0 50px
+        }
+
+        .ergo h2 {
+            font-size: 32px;
+            line-height: 35.75px;
+            font-weight: 700;
+            color: var(--p);
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .cards {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 0 20px;
+            margin-top: 24px;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 20px;
+            scrollbar-width: none
+        }
+
+        .cards::-webkit-scrollbar {
+            display: none
+        }
+
+        .cards::after {
+            content: "";
+            flex: none;
+            width: 4px
+        }
+
+        .cards article {
+            flex: none;
+            width: 303px;
+            scroll-snap-align: start
+        }
+
+        .cards .ph {
+            width: 303px;
+            height: 303px;
+            border-radius: 4px
+        }
+
+        .cards h3 {
+            font-size: 18px;
+            line-height: 22px;
+            font-weight: 600;
+            color: var(--p);
+            margin-top: 14.5px
+        }
+
+        .cards p {
+            font-size: 16px;
+            line-height: 18px;
+            margin-top: 10px;
+            white-space: nowrap
+        }
+
+        @media(min-width:1024px) {
+            .ei {
+                position: relative;
+                height: 753px;
+                padding: 0
+            }
+
+            .ergo h2 {
+                position: absolute;
+                left: max(56px, calc(50% - 664px));
+                top: 79px;
+                text-align: left;
+                font-size: 37px;
+                line-height: 37px
+            }
+
+            .cards {
+                position: absolute;
+                left: 50%;
+                top: 139.8px;
+                transform: translateX(-50%);
+                width: min(1328px, calc(100% - 112px));
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 432px));
+                justify-content: space-between;
+                overflow: visible;
+                padding: 0;
+                margin: 0
+            }
+
+            .cards::after {
+                display: none
+            }
+
+            .cards article {
+                width: auto
+            }
+
+            .cards .ph {
+                width: 100%;
+                max-width: 432px;
+                height: auto;
+                aspect-ratio: 1/1;
+                border-radius: 5px
+            }
+
+            .cards h3 {
+                font-size: 24.6px;
+                line-height: 24.6px;
+                margin-top: 25.5px
+            }
+
+            .cards p {
+                font-size: 17px;
+                line-height: 19.5px;
+                margin-top: 12.6px
+            }
+
+            .cards h3,
+            .cards p {
+                white-space: normal;
+                overflow-wrap: break-word;
+                min-width: 0
+            }
+
+            .ergo .ph::before {
+                font-size: 14px
+            }
+        }
+
+        /* reviews section */
+        .rvw {
+            background: #fbf7f4;
+            container-type: inline-size
+        }
+
+        .ri {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 48.5px 20px 44px
+        }
+
+        .rvw h2 {
+            font-size: 32px;
+            line-height: 35.5px;
+            font-weight: 700;
+            color: var(--p);
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .sum {
+            text-align: center;
+            margin-top: 24px
+        }
+
+        .sst {
+            font-size: 13px;
+            line-height: 13px;
+            color: var(--p)
+        }
+
+        .rrow {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 9px;
+            margin-top: 11px;
+            line-height: 40px
+        }
+
+        .rrow b {
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--p)
+        }
+
+        .rrow a {
+            font-size: 12.5px;
+            color: var(--p);
+            text-decoration: underline
+        }
+
+        .bars {
+            display: inline-grid;
+            grid-template-columns: 65px 164px auto;
+            column-gap: 9px;
+            grid-auto-rows: 15.5px;
+            align-items: center;
+            margin-top: 4px;
+            text-align: left
+        }
+
+        .bs {
+            font-size: 13px;
+            color: var(--p);
+            white-space: nowrap
+        }
+
+        .tk {
+            display: block;
+            height: 4.4px;
+            background: #c9c4e8;
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .tk b {
+            display: block;
+            height: 100%;
+            background: var(--p);
+            border-radius: 3px
+        }
+
+        .ct {
+            font-size: 12px;
+            color: var(--p);
+            white-space: nowrap
+        }
+
+        .gal {
+            display: grid;
+            grid-template-columns: repeat(4, 70.5px);
+            gap: 8px 7.8px;
+            justify-content: center;
+            margin-top: 24px
+        }
+
+        .tile {
+            aspect-ratio: 1;
+            border-radius: 3px
+        }
+
+        .tile.ph::before {
+            font-size: 10px;
+            padding: 2px;
+            line-height: 1.2
+        }
+
+        .play {
+            position: absolute;
+            z-index: 3;
+            left: 50%;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            margin: -13px 0 0 -13px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .play::after {
+            content: "";
+            border-left: 8px solid var(--p);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            margin-left: 2px
+        }
+
+        .ctl {
+            margin-top: 22px
+        }
+
+        .srt {
+            position: relative;
+            display: block
+        }
+
+        .srt select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 46.6px;
+            border: 2px solid var(--p);
+            background: transparent;
+            color: var(--p);
+            font-weight: 500;
+            font-size: 16px;
+            padding: 0 40px 0 18px;
+            border-radius: 2px;
+            cursor: pointer
+        }
+
+        .srt::after {
+            content: "";
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            width: 7px;
+            height: 7px;
+            border: solid var(--p);
+            border-width: 0 2px 2px 0;
+            transform: translateY(-70%) rotate(45deg);
+            pointer-events: none
+        }
+
+        .wr {
+            display: block;
+            width: 100%;
+            height: 46.6px;
+            background: var(--p);
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 11px;
+            border-radius: 2px
+        }
+
+        .rvs {
+            display: grid;
+            gap: 16px;
+            margin-top: 24px
+        }
+
+        .rv {
+            background: #f3eae8;
+            border-radius: 3px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column
+        }
+
+        .rt {
+            order: 1
+        }
+
+        .rs {
+            font-size: 12px;
+            line-height: 12px;
+            color: var(--p)
+        }
+
+        .rtl {
+            font-size: 16.5px;
+            line-height: 20px;
+            font-weight: 600;
+            color: var(--p);
+            margin-top: 4.5px
+        }
+
+        .rbd {
+            font-size: 16px;
+            line-height: 19px;
+            white-space: nowrap;
+            margin-top: 7.3px;
+            color: var(--tx)
+        }
+
+        .more {
+            display: block;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 500;
+            color: var(--p);
+            text-decoration: underline;
+            margin: 3px 0
+        }
+
+        .rimg {
+            order: 2;
+            width: 73px;
+            height: 73px;
+            margin-top: 16px;
+            border-radius: 3px
+        }
+
+        .rimg::before {
+            font-size: 9px;
+            line-height: 1.2;
+            padding: 2px
+        }
+
+        .who {
+            order: 3;
+            margin-top: 14.7px
+        }
+
+        .who h4 {
+            font-size: 17px;
+            line-height: 22px;
+            font-weight: 600;
+            color: var(--p)
+        }
+
+        .ver {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            line-height: 20px;
+            font-weight: 500;
+            color: var(--p);
+            margin-top: 3px
+        }
+
+        .ver svg {
+            width: 15px;
+            height: 15px;
+            flex: none
+        }
+
+        .meta {
+            order: 4;
+            margin-top: 21.6px
+        }
+
+        .sl {
+            order: 5;
+            margin-top: 19px
+        }
+
+        .sf .sl {
+            order: 4;
+            margin-top: 21.6px
+        }
+
+        .sf .meta {
+            order: 5;
+            margin-top: 11px
+        }
+
+        .g {
+            margin-bottom: 10.8px
+        }
+
+        .g:last-child {
+            margin-bottom: 0
+        }
+
+        .g dt {
+            font-size: 15px;
+            line-height: 20px;
+            font-weight: 500;
+            color: var(--p)
+        }
+
+        .g dd {
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--tx)
+        }
+
+        .q {
+            font-size: 15px;
+            line-height: 18px;
+            font-weight: 500;
+            color: var(--p)
+        }
+
+        .trk {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 11px;
+            margin-top: 7px
+        }
+
+        .trk::before {
+            content: "";
+            position: absolute;
+            left: 3.5px;
+            right: 5px;
+            top: 50%;
+            height: 1.5px;
+            margin-top: -.75px;
+            background: var(--p)
+        }
+
+        .trk i {
+            position: relative;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--p)
+        }
+
+        .trk i:last-child {
+            width: 11px;
+            height: 11px;
+            background: #f3eae8;
+            border: 1.5px solid var(--p)
+        }
+
+        .lb {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.7px;
+            line-height: 16px;
+            font-weight: 500;
+            margin-top: 8px
+        }
+
+        .td {
+            display: none
+        }
+
+        .pg {
+            display: flex;
+            justify-content: center;
+            margin-top: 28px
+        }
+
+        .pg button {
+            width: 26.3px;
+            height: 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--p);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .pg button.ar {
+            font-size: 22px;
+            padding-bottom: 3px
+        }
+
+
+
+        .pg button.on {
+            background: var(--p);
+            color: #fff;
+            width: 24px;
+            margin: 0 1.15px
+        }
+
+
+
+
+        @media(min-width:1024px) {
+            .ri {
+                --s: calc(100cqw/1440);
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                position: relative;
+                height: calc(1993.5*var(--s))
+            }
+
+            .rvw h2 {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: calc(80*var(--s));
+                font-size: calc(37*var(--s));
+                line-height: calc(37*var(--s))
+            }
+
+            .sum {
+                position: absolute;
+                left: calc(168.8*var(--s));
+                top: calc(147.3*var(--s));
+                margin: 0;
+                text-align: left
+            }
+
+            .sst {
+                font-size: calc(13*var(--s));
+                line-height: calc(13*var(--s))
+            }
+
+            .rrow {
+                justify-content: flex-start;
+                gap: calc(9.7*var(--s));
+                margin-top: calc(5.2*var(--s));
+                line-height: calc(40*var(--s))
+            }
+
+            .rrow b {
+                font-size: calc(36*var(--s))
+            }
+
+            .rrow a {
+                font-size: calc(12.5*var(--s))
+            }
+
+            .bars {
+                grid-template-columns: calc(64*var(--s)) calc(105.5*var(--s)) auto;
+                column-gap: calc(21.5*var(--s));
+                grid-auto-rows: calc(15.8*var(--s));
+                margin-top: calc(12.5*var(--s))
+            }
+
+            .bs {
+                font-size: calc(13*var(--s))
+            }
+
+            .ct {
+                font-size: calc(12*var(--s))
+            }
+
+            .tk {
+                height: calc(4.4*var(--s))
+            }
+
+            .gal {
+                position: absolute;
+                left: calc(575.7*var(--s));
+                top: calc(147.7*var(--s));
+                margin: 0;
+                grid-template-columns: repeat(4, calc(70.3*var(--s)));
+                gap: calc(7.9*var(--s))
+            }
+
+            .ctl {
+                position: absolute;
+                left: calc(1024*var(--s));
+                top: calc(170.5*var(--s));
+                width: calc(248*var(--s));
+                margin: 0
+            }
+
+            .srt select {
+                height: calc(46.6*var(--s));
+                font-size: calc(16.7*var(--s));
+                padding-left: calc(18*var(--s))
+            }
+
+            .wr {
+                height: calc(46.6*var(--s));
+                font-size: calc(16.7*var(--s));
+                margin-top: calc(8.9*var(--s))
+            }
+
+            .rvs {
+                position: absolute;
+                left: calc(168.8*var(--s));
+                top: calc(343.7*var(--s));
+                width: calc(1104*var(--s));
+                margin: 0;
+                gap: calc(24.6*var(--s))
+            }
+
+            .rv {
+                display: block;
+                position: relative;
+                height: calc(284.8*var(--s));
+                padding: 0
+            }
+
+            .rt {
+                display: contents
+            }
+
+            .rs,
+            .rtl,
+            .rbd,
+            .who,
+            .meta,
+            .sl,
+            .rimg {
+                position: absolute
+            }
+
+            .rv .who,
+            .rv .meta,
+            .rv .sl,
+            .rv .rimg,
+            .rv .rtl,
+            .rv .rbd {
+                margin: 0
+            }
+
+            .who {
+                left: calc(24.6*var(--s));
+                top: calc(30.3*var(--s))
+            }
+
+            .who h4 {
+                font-size: calc(19*var(--s));
+                line-height: calc(22*var(--s))
+            }
+
+            .ver {
+                font-size: calc(15*var(--s));
+                line-height: calc(20*var(--s));
+                margin-top: calc(5.4*var(--s))
+            }
+
+            .meta {
+                left: calc(24.6*var(--s));
+                top: calc(96.3*var(--s))
+            }
+
+            .g {
+                margin-bottom: calc(18.5*var(--s))
+            }
+
+            .g:last-child {
+                margin-bottom: 0
+            }
+
+            .g dt {
+                font-size: calc(15*var(--s));
+                line-height: calc(20.2*var(--s))
+            }
+
+            .g dd {
+                font-size: calc(14*var(--s));
+                line-height: calc(20.2*var(--s))
+            }
+
+            .rs {
+                left: calc(360.4*var(--s));
+                top: calc(32.2*var(--s));
+                font-size: calc(13*var(--s));
+                line-height: calc(13*var(--s))
+            }
+
+            .rtl {
+                left: calc(360.4*var(--s));
+                top: calc(56.8*var(--s));
+                font-size: calc(16.7*var(--s));
+                line-height: calc(20*var(--s))
+            }
+
+            .tight .rtl {
+                top: calc(49.8*var(--s))
+            }
+
+            .rbd {
+                left: calc(360.4*var(--s));
+                top: calc(84.4*var(--s));
+                height: calc(70.3*var(--s));
+                display: flex;
+                align-items: center;
+                font-size: calc(16*var(--s));
+                line-height: calc(19.3*var(--s))
+            }
+
+            .tight .rbd {
+                top: calc(76.5*var(--s));
+                height: auto;
+                align-items: flex-start
+            }
+
+            .sl {
+                left: calc(360.4*var(--s));
+                top: calc(186.1*var(--s));
+                width: calc(319*var(--s))
+            }
+
+            .q {
+                font-size: calc(15*var(--s))
+            }
+
+            .lb {
+                font-size: calc(12.7*var(--s))
+            }
+
+            .rimg {
+                left: calc(1008.3*var(--s));
+                top: calc(182*var(--s));
+                width: calc(71*var(--s));
+                height: calc(71*var(--s))
+            }
+
+            .more {
+                display: none
+            }
+
+            .td {
+                display: inline
+            }
+
+            .tm {
+                display: none
+            }
+
+            .pg {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: calc(1912.7*var(--s));
+                margin: 0
+            }
+
+            .pg button {
+                width: calc(26.4*var(--s));
+                height: calc(24.6*var(--s));
+                font-size: calc(16.7*var(--s))
+            }
+
+            .pg button.on {
+                width: calc(24.6*var(--s));
+                margin: 0 calc(.9*var(--s))
+            }
+        }
+
+        /* materials section */
+        .mat {
+            background: #fbf7f4;
+            container-type: inline-size
+        }
+
+        .mi {
+            padding: 48.5px 0 49px
+        }
+
+        .mat h2 {
+            font-size: 32px;
+            line-height: 35.75px;
+            font-weight: 700;
+            color: var(--p);
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .mcs {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 0 20px;
+            margin-top: 24px;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 20px;
+            scrollbar-width: none
+        }
+
+        .mcs::-webkit-scrollbar {
+            display: none
+        }
+
+        .mcs::after {
+            content: "";
+            flex: none;
+            width: 4px
+        }
+
+        .mcs article {
+            flex: none;
+            width: 303px;
+            scroll-snap-align: start
+        }
+
+        .mcs .ph {
+            width: 303px;
+            height: 303px;
+            border-radius: 4px
+        }
+
+        .mcs h3 {
+            white-space: nowrap;
+            font-size: 18px;
+            line-height: 22px;
+            font-weight: 600;
+            color: var(--p);
+            margin-top: 14.5px
+        }
+
+        .mcs p {
+            font-size: 16px;
+            line-height: 19px;
+            margin-top: 10px;
+            white-space: nowrap
+        }
+
+        @media(min-width:1024px) {
+            .mi {
+                position: relative;
+                height: 729px;
+                padding: 0
+            }
+
+            .mat h2 {
+                position: absolute;
+                left: max(56px, calc(50% - 664px));
+                top: 55.8px;
+                text-align: left;
+                font-size: 37px;
+                line-height: 37px
+            }
+
+            .mcs {
+                position: absolute;
+                left: 50%;
+                top: 116.3px;
+                transform: translateX(-50%);
+                width: min(1328px, calc(100% - 112px));
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 432px));
+                justify-content: space-between;
+                overflow: visible;
+                padding: 0;
+                margin: 0
+            }
+
+            .mcs::after {
+                display: none
+            }
+
+            .mcs article {
+                width: auto
+            }
+
+            .mcs .ph {
+                width: 100%;
+                max-width: 432px;
+                height: auto;
+                aspect-ratio: 1/1;
+                border-radius: 5px
+            }
+
+            .mcs h3 {
+                font-size: 24.6px;
+                line-height: 24.6px;
+                margin-top: 25.7px
+            }
+
+            .mcs p {
+                font-size: 17px;
+                line-height: 19px;
+                margin-top: 12.9px
+            }
+
+            .mcs h3,
+            .mcs p {
+                white-space: normal;
+                overflow-wrap: break-word;
+                min-width: 0
+            }
+        }
+
+        @media(min-width:1024px) and (max-width:1250px) {
+            .wrap {
+                grid-template-columns: 66px minmax(0, 1fr) 400px
+            }
+
+            .stage {
+                margin-right: 24px
+            }
+        }
+
+        /* ==========================================================
+       FAQ SECTION
+       Desktop = default styles | Mobile = @media (max-width: 767px)
+       All properties are set individually (no :root variables).
+       ========================================================== */
+
+        .page {
+            margin: 0;
+            padding: 56px 82px 56px 24px;
+            font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .faq,
+        .faq *,
+        .faq *::before,
+        .faq *::after {
+            box-sizing: border-box;
+        }
+
+        /* ---------- Section wrapper ---------- */
+        .faq {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            width: 100%;
+            min-height: 650px;
+            background-color: #e3e0f5;
+        }
+
+        /* ---------- Image (left on desktop) ---------- */
+        .faq__media {
+            flex: 0 0 49.4%;
+            width: 49.4%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq__image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        /* ---------- Content (right on desktop) ---------- */
+        .faq__content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 56px;
+            text-align: center;
+        }
+
+        .faq__title {
+            margin: 0 0 18px 0;
+            font-size: 40px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: #4b3f8a;
+        }
+
+        .faq__subtitle {
+            margin: 0 0 40px 0;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: #2b2b33;
+        }
+
+        /* ---------- Accordion list ---------- */
+        .faq__list {
+            width: 100%;
+            max-width: 640px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .faq__item {
+            width: 100%;
+            background-color: #faf7f5;
+            border-radius: 4px;
+        }
+
+        .faq__question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 76px;
+            padding: 20px 36px 20px 38px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .faq__question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq__question::marker {
+            content: "";
+        }
+
+        .faq__question:focus-visible {
+            outline: 2px solid #4b3f8a;
+            outline-offset: 2px;
+        }
+
+        .faq__question-text {
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #4b3f8a;
+        }
+
+        /* ---------- Plus / minus icon ---------- */
+        .faq__icon {
+            position: relative;
+            flex: 0 0 26px;
+            width: 26px;
+            height: 26px;
+        }
+
+        .faq__icon::before,
+        .faq__icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background-color: #4b3f8a;
+            transform: translate(-50%, -50%);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .faq__icon::before {
+            width: 26px;
+            height: 2px;
+        }
+
+        .faq__icon::after {
+            width: 2px;
+            height: 26px;
+        }
+
+        .faq__item[open] .faq__icon::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+            opacity: 0;
+        }
+
+        /* ---------- Answer ---------- */
+        .faq__answer {
+            padding: 0 38px 24px 38px;
+        }
+
+        .faq__answer-text {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #2b2b33;
+        }
+
+        /* ---------- Button ---------- */
+        .faq__button {
+            display: inline-block;
+            margin-top: 48px;
+            padding: 24px 58px;
+            background-color: #4e4088;
+            border-radius: 3px;
+            font-size: 19px;
+            font-weight: 500;
+            line-height: 1;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+
+        .faq__button:hover {
+            background-color: #3d3170;
+        }
+
+        .faq__button:focus-visible {
+            outline: 2px solid #4b3f8a;
+            outline-offset: 3px;
+        }
+
+        /* ==========================================================
+       MOBILE  (content on top, image at the bottom)
+       ========================================================== */
+        @media (max-width: 767px) {
+
+            .faq {
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .faq__content {
+                order: 1;
+                width: 100%;
+                flex: 0 0 auto;
+                justify-content: flex-start;
+                padding: 80px 40px 96px 40px;
+            }
+
+            .faq__media {
+                order: 2;
+                width: 100%;
+                flex: 0 0 auto;
+                height: 0;
+                padding-bottom: 103%;
+            }
+
+            .faq__title {
+                margin: 0 0 28px 0;
+                font-size: 38px;
+                line-height: 1.2;
+            }
+
+            .faq__subtitle {
+                margin: 0 0 36px 0;
+                font-size: 21px;
+                line-height: 1.4;
+            }
+
+            .faq__list {
+                max-width: 100%;
+                gap: 32px;
+            }
+
+            .faq__question {
+                min-height: 112px;
+                padding: 20px 30px 20px 40px;
+            }
+
+            .faq__question-text {
+                font-size: 21px;
+            }
+
+            .faq__icon {
+                flex: 0 0 24px;
+                width: 24px;
+                height: 24px;
+            }
+
+            .faq__icon::before {
+                width: 24px;
+            }
+
+            .faq__icon::after {
+                height: 24px;
+            }
+
+            .faq__answer {
+                padding: 0 40px 24px 40px;
+            }
+
+            /* 5th question is hidden on mobile */
+            .faq__item--desktop-only {
+                display: none;
+            }
+
+            .faq__button {
+                display: block;
+                width: 100%;
+                margin-top: 48px;
+                padding: 34px 20px;
+                text-align: center;
+                font-size: 24px;
+            }
+        }
+
+        /* complete your sleep routine */
+        :root {
+            --bg: #faf6f4;
+            --purple: #4a3f87;
+            --card-bg: #f0e6e4;
+            --btn-bg: #bfc0e6;
+            --text: #2b2b2b;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: "Figtree", "Mulish", "Helvetica Neue", Arial, sans-serif;
+            color: var(--text);
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        /* ---------- Mobile + Tablet (default) ---------- */
+        .routine {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px 40px;
+            background: var(--bg);
+        }
+
+        .routine__head {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .routine__title {
+            color: var(--purple);
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .routine__filters {
+            display: none;
+        }
+
+        .routine__select {
+            position: relative;
+            margin-bottom: 24px;
+            color: var(--purple);
+        }
+
+        .routine__select select {
+            width: 100%;
+            height: 48px;
+            padding: 0 44px 0 18px;
+            font: 600 17px/1 inherit;
+            font-family: inherit;
+            color: var(--purple);
+            background: transparent;
+            border: 2px solid var(--purple);
+            border-radius: 4px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .routine__select select:focus-visible {
+            outline: 3px solid var(--btn-bg);
+            outline-offset: 2px;
+        }
+
+        .routine__chev {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .routine__grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px 16px;
+            align-items: stretch;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card__media {
+            position: relative;
+            aspect-ratio: 4 / 5;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .card__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card__badge {
+            position: absolute;
+            left: 50%;
+            bottom: 8px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            white-space: nowrap;
+            background: var(--bg);
+            border-radius: 4px;
+            color: var(--purple);
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        .card__badge svg {
+            width: 18px;
+            height: 26px;
+            flex: none;
+        }
+
+        .card__rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            color: var(--purple);
+            font-size: 14px;
+        }
+
+        .card__stars {
+            display: flex;
+            gap: 1px;
+        }
+
+        .card__stars svg {
+            width: 12px;
+            height: 12px;
+            fill: currentColor;
+        }
+
+        .card__name {
+            color: var(--purple);
+            font-size: 18px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .card__name .long {
+            display: none;
+        }
+
+        .card__swatches {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+            min-height: 18px;
+        }
+
+        .swatch {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            background: var(--c);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .swatch[aria-pressed="true"] {
+            box-shadow: 0 0 0 2px var(--purple);
+        }
+
+        .card__desc {
+            font-size: 15px;
+            line-height: 1.4;
+            margin-top: 12px;
+            flex: 1;
+        }
+
+        .card__btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 40px;
+            margin-top: 16px;
+            background: var(--btn-bg);
+            color: var(--text);
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: background .2s;
+        }
+
+        .card__btn:hover {
+            background: #adaedb;
+        }
+
+        .card__btn .now {
+            display: none;
+        }
+
+        .card__btn s {
+            color: var(--purple);
+            opacity: .6;
+            font-weight: 500;
+        }
+
+        .routine__shop-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 54px;
+            margin-top: 28px;
+            background: var(--purple);
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .routine__shop-all:hover {
+            background: #3c3270;
+        }
+
+        /* ---------- Desktop ---------- */
+        @media (min-width: 1024px) {
+            .routine {
+                max-width: 1282px;
+                padding: 70px 50px 66px;
+            }
+
+            .br-m {
+                display: none;
+            }
+
+            .routine__select {
+                display: none;
+            }
+
+            .routine__shop-all {
+                display: none;
+            }
+
+            .routine__head {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .routine__title {
+                font-size: 30px;
+                text-align: left;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            .routine__filters {
+                display: flex;
+                align-items: center;
+                gap: 19px;
+                color: var(--purple);
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .routine__filters-list {
+                display: flex;
+                gap: 19px;
+            }
+
+            .routine__filters button,
+            .routine__filters-all {
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer;
+                text-decoration: none;
+                padding: 0;
+            }
+
+            .routine__filters button[aria-current="true"] {
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                text-decoration-thickness: 1.5px;
+            }
+
+            .routine__filters button:hover,
+            .routine__filters-all:hover {
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+
+            .routine__grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 14px;
+            }
+
+            .card__media {
+                aspect-ratio: 285 / 356;
+            }
+
+            .card__media img {
+                object-fit: contain;
+                padding: 8% 6%;
+            }
+
+            .card__badge {
+                left: 18px;
+                bottom: 18px;
+                transform: none;
+                font-size: 12px;
+                padding: 7px 6px;
+                background: var(--bg);
+            }
+
+            .card__rating {
+                margin-top: 20px;
+                font-size: 12px;
+                gap: 6px;
+            }
+
+            .card__stars svg {
+                width: 10px;
+                height: 10px;
+            }
+
+            .card__name {
+                font-size: 16px;
+                margin-top: 8px;
+            }
+
+            .card__name .short {
+                display: none;
+            }
+
+            .card__name .long {
+                display: inline;
+            }
+
+            .card__swatches {
+                margin-top: 9px;
+                gap: 5px;
+            }
+
+            .swatch {
+                width: 14px;
+                height: 14px;
+            }
+
+            .card__desc {
+                font-size: 13px;
+                margin-top: 8px;
+            }
+
+            .card__btn {
+                height: 42px;
+                margin-top: 12px;
+                font-size: 14px;
+            }
+
+            .card__btn .now {
+                display: inline;
+            }
+        }
+
+    
+    /* =========================================================
+     FOOTER
+     - 769px and up: desktop design (4 link columns + newsletter card, big wordmark)
+     - 768px and below: mobile design (newsletter card first, accordion links)
+     ========================================================= */
+        .site-footer {
+            padding: 66px 56px 22px;
+            background: #4E4086;
+            color: #FFFFFF;
+            font-family: "Figtree", "Inter", "Helvetica Neue", Arial, sans-serif;
+
+        }
+
+        .site-footer *,
+        .site-footer *::before,
+        .site-footer *::after {
+            box-sizing: border-box;
+        }
+
+        .site-footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-footer ul {
+            list-style: none;
+        }
+
+        .site-footer__inner {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* ---------- Top: links + newsletter ---------- */
+        .site-footer__top {
+            display: grid;
+            grid-template-columns: 1fr 490px;
+            align-items: start;
+        }
+
+        /* Link columns */
+        .site-footer__nav {
+            display: grid;
+            grid-template-columns: 170px 158px 180px 180px;
+        }
+
+        .site-footer__heading {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 24px;
+        }
+
+        .site-footer__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0;
+            background: none;
+            border: 0;
+            color: #FFFFFF;
+            font: inherit;
+            text-align: left;
+            cursor: default;
+            pointer-events: none;
+            /* desktop: columns are always open */
+        }
+
+        .site-footer__icon {
+            display: none;
+        }
+
+        .site-footer__panel {
+            display: block;
+        }
+
+        .site-footer__links {
+            padding-top: 21px;
+        }
+
+        .site-footer__links li {
+            line-height: 32px;
+        }
+
+        .site-footer__links a {
+            font-size: 15px;
+            font-weight: 500;
+            transition: opacity .2s;
+        }
+
+        .site-footer__links a:hover {
+            opacity: .75;
+        }
+
+        /* ---------- Newsletter card ---------- */
+        .site-footer__news {
+            position: relative;
+            height: 200px;
+            margin-top: 6px;
+            padding: 24px 20px 0 213px;
+            border-radius: 4px;
+            background: #C3C2EA;
+            color: #4B3F85;
+        }
+
+        .site-footer__news-img {
+            position: absolute;
+            left: 8px;
+            bottom: 0;
+            width: 190px;
+            height: 236px;
+            /* taller than the card: the pillow rises above it */
+            object-fit: contain;
+            object-position: center bottom;
+        }
+
+        .site-footer__news-title {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 24px;
+        }
+
+        .site-footer__news-text {
+            margin-top: 2px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 15px;
+        }
+
+        .site-footer__form {
+            display: flex;
+            align-items: center;
+            height: 42px;
+            margin-top: 19px;
+            padding: 0 12px 0 10px;
+            border: 2px solid #4B3F85;
+            border-radius: 3px;
+            background: #E4E3F7;
+        }
+
+        .site-footer__field-bar {
+            flex: none;
+            width: 2px;
+            height: 20px;
+            margin-right: 10px;
+            background: #4B3F85;
+        }
+
+        .site-footer__input {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            background: none;
+            border: 0;
+            outline: 0;
+            color: #4B3F85;
+            font: inherit;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .site-footer__input::placeholder {
+            color: #4B3F85;
+            opacity: 1;
+        }
+
+        .site-footer__form:focus-within {
+            box-shadow: 0 0 0 3px #8E84CC;
+        }
+
+        .site-footer__submit {
+            display: inline-flex;
+            flex: none;
+            padding: 0;
+            background: none;
+            border: 0;
+            color: #4B3F85;
+            cursor: pointer;
+        }
+
+        .site-footer__submit svg {
+            width: 21px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .site-footer__social {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .site-footer__social a {
+            display: inline-flex;
+            color: #4B3F85;
+            transition: opacity .2s;
+        }
+
+        .site-footer__social a:hover {
+            opacity: .7;
+        }
+
+        .site-footer__social svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .site-footer__tag {
+            margin-left: 8px;
+            color: #4B3F85;
+        }
+
+        /* ---------- Big wordmark ---------- */
+        .site-footer__wordmark {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-top: 32px;
+        }
+
+        /* ---------- Legal line ---------- */
+        .site-footer__legal {
+            margin-top: 22px;
+            color: #C9C5EE;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        .site-footer__legal a {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .site-footer__legal a:hover {
+            opacity: .8;
+        }
+
+        .site-footer__dot {
+            margin: 0 6px;
+        }
+
+        /* ---------- Small desktop (1101px - 1287px): columns and newsletter card shrink to fit ---------- */
+        @media (min-width: 1101px) and (max-width: 1287px) {
+            .site-footer__top {
+                grid-template-columns: minmax(0, 1fr) 450px;
+                column-gap: 24px;
+            }
+
+            .site-footer__nav {
+                grid-template-columns: minmax(0, 170fr) minmax(0, 158fr) minmax(0, 180fr) minmax(0, 180fr);
+            }
+
+            .site-footer__news {
+                padding-left: 190px;
+            }
+
+            .site-footer__news-img {
+                width: 175px;
+            }
+        }
+
+        /* ---------- Tablet (1100px and below): newsletter drops under the links ---------- */
+        @media (max-width: 1100px) {
+            .site-footer {
+                padding: 56px 24px 22px;
+            }
+
+            .site-footer__top {
+                grid-template-columns: 1fr;
+            }
+
+            .site-footer__nav {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .site-footer__news {
+                width: 490px;
+                max-width: 100%;
+                margin-top: 80px;
+            }
+        }
+
+        /* ---------- Mobile design (768px and below) ---------- */
+        @media (max-width: 768px) {
+            .site-footer {
+                padding: 48px 20px 28px;
+            }
+
+            .site-footer__top {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .site-footer__news {
+                order: -1;
+            }
+
+            /* card first, links after */
+
+            /* Newsletter card */
+            .site-footer__news {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                height: auto;
+                min-height: 452px;
+                margin-top: 0;
+                padding: 26px 24px 0;
+                text-align: center;
+            }
+
+            .site-footer__news-title {
+                font-size: 18px;
+                line-height: 24px;
+            }
+
+            .site-footer__news-text {
+                margin-top: 2px;
+                line-height: 16px;
+            }
+
+            .site-footer__form {
+                width: 100%;
+                height: 48px;
+                margin-top: 28px;
+                padding: 0 14px 0 8px;
+            }
+
+            .site-footer__social {
+                margin-top: 18px;
+                justify-content: center;
+            }
+
+            .site-footer__news-img {
+                position: static;
+                width: 225px;
+                height: 232px;
+                margin-top: auto;
+            }
+
+            /* Accordion links */
+            .site-footer__nav {
+                display: block;
+                margin-top: 20px;
+            }
+
+            .site-footer__col {
+                border-bottom: 1.5px solid #6E65AD;
+            }
+
+            .site-footer__heading {
+                font-size: 18px;
+                line-height: 24px;
+            }
+
+            .site-footer__toggle {
+                height: 56px;
+                padding-right: 2px;
+                cursor: pointer;
+                pointer-events: auto;
+            }
+
+            .site-footer__toggle:focus-visible {
+                outline: 2px solid #C3C2EA;
+                outline-offset: 2px;
+            }
+
+            .site-footer__icon {
+                display: block;
+                flex: none;
+                width: 14px;
+                height: 14px;
+                stroke: #FFFFFF;
+                stroke-width: 1.8;
+                fill: none;
+            }
+
+            .site-footer__icon .v {
+                transform-origin: center;
+                transition: transform .25s ease, opacity .25s ease;
+            }
+
+            .site-footer__col.is-open .site-footer__icon .v {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+
+            .site-footer__panel {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows .3s ease;
+            }
+
+            .site-footer__col.is-open .site-footer__panel {
+                grid-template-rows: 1fr;
+            }
+
+            .site-footer__list-wrap {
+                min-height: 0;
+                overflow: hidden;
+                visibility: hidden;
+                transition: visibility 0s linear .3s;
+            }
+
+            .site-footer__col.is-open .site-footer__list-wrap {
+                visibility: visible;
+                transition-delay: 0s;
+            }
+
+            .site-footer__links {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: repeat(3, auto);
+                grid-auto-flow: column;
+                column-gap: 8px;
+                padding: 0 0 21px;
+            }
+
+            .site-footer__links a {
+                font-size: 16px;
+            }
+
+            .site-footer__wordmark {
+                margin-top: 40px;
+            }
+
+            .site-footer__legal {
+                margin-top: 30px;
+                padding: 0 8px;
+                font-size: 13px;
+                line-height: 27px;
+                text-align: center;
+            }
+
+            .site-footer__legal>a,
+            .site-footer__legal>span {
+                white-space: nowrap;
+            }
+
+            .site-footer__legal>span:first-child {
+                display: block;
+            }
+
+            /* copyright on its own line */
+            .site-footer__legal>.site-footer__dot:nth-child(2) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="wrap">
+
+            <div class="thumbs" id="thumbs"></div>
+
+            <div class="gwrap">
+                <div class="gallery">
+                    <div class="stage" id="stage">
+                        <span class="tag-m">Neck Pressure Relief</span>
+                        <button class="arrow l" id="prev" aria-label="Previous">‹</button>
+                        <button class="arrow r" id="next" aria-label="Next">›</button>
+                        <svg id="pillow" viewBox="0 0 400 260" aria-label="CloudAlign pillow">
+                            <defs>
+                                <radialGradient id="pg" cx="45%" cy="35%" r="75%">
+                                    <stop offset="0" stop-color="#fff" />
+                                    <stop offset="1" stop-color="var(--pillow,#fff)" stop-opacity=".9" />
+                                </radialGradient>
+                            </defs>
+                            <path fill="url(#pg)" stroke="#e6e3e3"
+                                d="M70 90C70 50 120 40 150 60C180 30 230 40 250 60C290 35 340 55 335 105C360 130 345 180 310 190C300 230 240 225 200 205C160 230 100 225 95 185C50 170 45 110 70 90Z" />
+                        </svg>
+                        <div class="alt" id="alt"></div>
+                        <div class="badge m"><svg viewBox="0 0 16 30">
+                                <path d="M12 2C4 6 2 14 5 28c4-4 8-13 7-26z" />
+                            </svg><span>#1 Best-Selling<br>Pillow of 2025</span><svg class="f" viewBox="0 0 16 30">
+                                <path d="M12 2C4 6 2 14 5 28c4-4 8-13 7-26z" />
+                            </svg></div>
+                        <div class="badge d"><svg viewBox="0 0 16 30">
+                                <path d="M12 2C4 6 2 14 5 28c4-4 8-13 7-26z" />
+                            </svg><span>#1 Best-Selling<br>Pillow of 2025</span><svg class="f" viewBox="0 0 16 30">
+                                <path d="M12 2C4 6 2 14 5 28c4-4 8-13 7-26z" />
+                            </svg></div>
+                        <div class="tags"><span>Neck Pressure Relief</span><span>Chiropractor Approved</span><span>Stay
+                                cool all night</span><span>Hypoallergenic</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info">
+                <div class="stars" style="--o:1"><i>★★★★★</i><a href="#">(50,134 Reviews)</a></div>
+                <h1 style="--o:2">CloudAlign™ Pillow</h1>
+                <div class="price" style="--o:3">$49.99 <s>$100</s></div>
+                <p class="desc" style="--o:4"><span class="dm">Three zones. Two heights. Support for every
+                        sleeper.</span><span class="dd">3-zone contour and a dual-height system deliver targeted support
+                        for any sleep position.</span></p>
+
+                <div class="hl" style="--o:6">
+                    <div style="--m:1"><svg viewBox="0 0 16 16">
+                            <path d="M8 1l2 4.5 5 .6-3.7 3.4 1 4.9L8 11.900 3.700 14.400l1-4.900L1 6.100l5-.6z" />
+                        </svg><em>#1 Selling TikTok pillow</em></div>
+                    <div style="--m:4"><svg viewBox="0 0 16 16">
+                            <path d="M4 12a3 3 0 010-6 4 4 0 017.500 1A2.500 2.500 0 0112 12z" />
+                        </svg><em>Voted Softest Pillow of 2025</em></div>
+                    <div style="--m:2"><svg viewBox="0 0 16 16">
+                            <path d="M8 0l1 3 3-1-1 3 3 1-3 1 1 3-3-1-1 3-1-3-3 1 1-3-3-1 3-1-1-3 3 1z" />
+                        </svg><em>Stays cool all night</em></div>
+                    <div style="--m:5"><svg viewBox="0 0 16 16">
+                            <path d="M14 2C6 2 2 6 2 11l-1 4 3-1c6 0 10-5 10-12z" />
+                        </svg><em>Hypoallergenic</em></div>
+                    <div style="--m:3"><svg viewBox="0 0 16 16">
+                            <path d="M8 1l4 5H4zM8 15l-4-5h8z" />
+                        </svg><em>Dual height</em></div>
+                    <div style="--m:6"><svg viewBox="0 0 16 16">
+                            <circle cx="8" cy="5" r="3.500" />
+                            <path d="M2 15c0-5 12-5 12 0z" />
+                        </svg><em>OEKO-TEX® Certified &amp; Naia™ Sustainable Filling</em></div>
+                </div>
+
+                <div style="--o:5">
+                    <div class="lbl" style="margin-top:6px"><b>Color:</b> <span id="cname">White</span></div>
+                    <div class="swatches" id="swatches"></div>
+                </div>
+
+                <div class="rev" style="--o:7">
+                    <div class="sec-h hide-d" style="margin-top:26px">What Mellow Sleepers Are Saying:</div>
+                    <div class="vids" id="vids1"></div>
+                </div>
+
+                <div style="--o:8">
+                    <div class="sizeRow">
+                        <div class="lbl"><b>Size:</b> Regular (If under 5'7 Tall)</div><a href="#">Size Guide</a>
+                    </div>
+                    <div class="sizes"><button class="sz on">Regular</button><button class="sz">High</button></div>
+                </div>
+
+                <div style="--o:9">
+                    <div class="sec-h" style="font-size:18px;margin:22px 0 14px;color:var(--p)">Buy More, Save More:
+                    </div>
+                    <div class="bundles" id="bundles">
+                        <div class="bd" data-n="1">
+                            <div class="bd-h">
+                                <div class="bd-l"><span class="rad"></span>
+                                    <div class="bd-t" style="flex:1">1 Pillow <small>Save $50.01</small><span
+                                            class="bd-s">Limited Time Sale Ends Soon</span></div>
+                                </div>
+                                <div class="bd-p">$49.99<s>$100</s></div>
+                            </div>
+                        </div>
+                        <div class="bd on" data-n="2"><span class="ribbon">Most Popular</span>
+                            <div class="bd-h">
+                                <div class="bd-l"><span class="rad"></span>
+                                    <div class="bd-t" style="flex:1">2 Pillows <small>Save $111.11</small><span
+                                            class="bd-s">One for You, One for Them</span></div>
+                                </div>
+                                <div class="bd-p">$88.89<s>$200</s></div>
+                            </div>
+                            <div class="bd-x">
+                                <div class="pick"><span>Colors:</span><span>Sizes:</span>
+                                    <div class="sel c"><i class="dot"></i><select class="cs"></select></div>
+                                    <div class="sel"><select class="ss">
+                                            <option>Regular</option>
+                                            <option>High</option>
+                                        </select></div>
+                                    <div class="sel c"><i class="dot"></i><select class="cs"></select></div>
+                                    <div class="sel"><select class="ss">
+                                            <option>Regular</option>
+                                            <option>High</option>
+                                        </select></div>
+                                </div>
+                                <div class="addon"><label><input type="checkbox" class="chk" id="case" checked>Add 2 ×
+                                        Cooling Pillowcase (Protect &amp; Cool)</label>
+                                    <div>$19.99<s>$39.98</s></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bd" data-n="4"><span class="ribbon">Best Value</span>
+                            <div class="bd-h">
+                                <div class="bd-l"><span class="rad"></span>
+                                    <div class="bd-t" style="flex:1">4 Pillows <small>Save $248.01</small><span
+                                            class="bd-s">Limited Time Family Bundle + FREE Shipping</span></div>
+                                </div>
+                                <div class="bd-p">$151.99<s>$400</s></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="--o:10"><button class="cta" id="cart"></button>
+                    <p class="note">Savings based on comparable value. <a href="#">Learn More</a></p>
+                    <div class="trial"><span>30-Day Trial or your money back</span><span>$0.99 Shipping on orders over
+                            $100</span><span>Hassle-free returns</span></div>
+                    <div style="margin-top:22px">
+                        <div class="acc"><button>Why You’ll Love It <i>+</i></button>
+                            <p>3-zone contour support, dual-height design, cooling cover and hypoallergenic filling for
+                                every sleep position.</p>
+                        </div>
+                        <div class="acc"><button>Materials &amp; Care <i>+</i></button>
+                            <p>Removable, machine-washable cooling cover. Naia™ sustainable filling. Spot clean the
+                                pillow core.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rev hide-m" style="--o:11">
+                    <div class="sec-h">What Mellow Sleepers Are Saying:</div>
+                    <div class="vids" id="vids2"></div>
+                </div>
+
+                <div class="testi" style="--o:12"><q id="tq"></q>
+                    <h4 id="tn"></h4>
+                    <p>✔ Verified Buyer</p>
+                    <div class="dots" id="dots"></div>
+                </div>
+
+                <div style="--o:13">
+                    <div class="sec-h">Frequently Bought Together:</div>
+                    <div class="fbt-l" id="fl"></div>
+                    <div class="fbt-c" id="fc"></div>
+                    <button class="cta" id="fcta"></button>
+                    <p class="note">Savings based on comparable value. <a href="#">Learn More</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marquee: press logos -->
+    <section class="marquee" aria-label="As seen in">
+        <div class="marquee__track">
+            <div class="marquee__group">
+                <span class="marquee__logo logo--us" role="img" aria-label="Us Weekly">Us<small>WEEKLY</small></span>
+                <span class="marquee__logo logo--usa" role="img"
+                    aria-label="USA Today"><i></i><span>USA<br>TODAY</span></span>
+                <span class="marquee__logo logo--scary" role="img"
+                    aria-label="Scary Mommy"><span>Scary<br>Mommy</span></span>
+                <span class="marquee__logo logo--rd" role="img"
+                    aria-label="Reader’s Digest"><small>Reader’s</small><span>Digest</span></span>
+                <span class="marquee__logo logo--forbes" role="img" aria-label="Forbes">Forbes</span>
+                <span class="marquee__logo logo--life" role="img" aria-label="Life &amp; Style">Life&amp;Style</span>
+                <span class="marquee__logo logo--pop" role="img" aria-label="Popsugar">Popsugar</span>
+                <span class="marquee__logo logo--oprah" role="img"
+                    aria-label="Oprah Daily"><em>Oprah</em><span>Daily</span></span>
+            </div>
+            <div class="marquee__group" aria-hidden="true">
+                <span class="marquee__logo logo--us" role="img" aria-label="Us Weekly">Us<small>WEEKLY</small></span>
+                <span class="marquee__logo logo--usa" role="img"
+                    aria-label="USA Today"><i></i><span>USA<br>TODAY</span></span>
+                <span class="marquee__logo logo--scary" role="img"
+                    aria-label="Scary Mommy"><span>Scary<br>Mommy</span></span>
+                <span class="marquee__logo logo--rd" role="img"
+                    aria-label="Reader’s Digest"><small>Reader’s</small><span>Digest</span></span>
+                <span class="marquee__logo logo--forbes" role="img" aria-label="Forbes">Forbes</span>
+                <span class="marquee__logo logo--life" role="img" aria-label="Life &amp; Style">Life&amp;Style</span>
+                <span class="marquee__logo logo--pop" role="img" aria-label="Popsugar">Popsugar</span>
+                <span class="marquee__logo logo--oprah" role="img"
+                    aria-label="Oprah Daily"><em>Oprah</em><span>Daily</span></span>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Marquee: repeat the logos until one group is wider than the screen, then loop it
+        (function () {
+            var track = document.querySelector('.marquee__track');
+            if (!track) return;
+            var setHTML = track.querySelector('.marquee__group').innerHTML;
+            var timer;
+
+            function build() {
+                track.innerHTML = '<div class="marquee__group">' + setHTML + '</div>';
+                var group = track.firstElementChild;
+                var guard = 0;
+                while (group.offsetWidth < window.innerWidth && guard++ < 20) {
+                    group.insertAdjacentHTML('beforeend', setHTML);
+                }
+                var clone = group.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                track.appendChild(clone);
+                track.style.animationDuration = Math.max(15, group.offsetWidth / 50) + 's';   /* about 50px per second */
+            }
+
+            build();
+            window.addEventListener('load', build);
+            window.addEventListener('resize', function () {
+                clearTimeout(timer);
+                timer = setTimeout(build, 200);
+            });
+        })();
+    </script>
+
+    <!-- One pillow. three zones. Zero companies -->
+    <section class="zones">
+        <div class="zi">
+            <h2>One Pillow.<br class="m"> Three Zones.<br class="m"> Zero Compromises.</h2>
+            <p class="sub">Engineered Support for Every Sleep Style</p>
+            <div class="pic ph"
+                data-label="Pillow image&#10;images/pillow-desktop.jpg · images/pillow-mobile.jpg&#10;(without the 1-2-3 markers)">
+                <picture>
+                    <source media="(min-width:1024px)" srcset="images/pillow-desktop.jpg"><img
+                        src="images/pillow-mobile.jpg" alt="CloudAlign pillow showing three support zones"
+                        onerror="this.remove()">
+                </picture>
+                <span class="mk a" style="--dx:51.4%;--dy:7.6%;--dw:4.63%;--mx:49.6%;--my:17.6%;--mw:8.2%">1</span>
+                <span class="mk" style="--dx:9.7%;--dy:82%;--dw:4.8%;--mx:11%;--my:79.6%;--mw:9%">2</span>
+                <span class="mk" style="--dx:50.2%;--dy:94.5%;--dw:4.8%;--mx:51.3%;--my:88.6%;--mw:9%">3</span>
+            </div>
+            <div class="zl">
+                <article>
+                    <h3>1. Soft Side</h3>
+                    <p>Cradles the head for back and<br class="d"> stomach<br class="m"> sleepers. Approx.<br class="d">
+                        3.5" neck support zone.</p>
+                </article>
+                <article>
+                    <h3>2. Side Sleep Zone</h3>
+                    <p>Wings relieve shoulder<br class="d"> pressure and cradle<br class="m"> the arm<br class="d"> for
+                        side sleepers.</p>
+                </article>
+                <article>
+                    <h3>3. Lift Side</h3>
+                    <p>Adds neck lift for side<br class="d"> sleepers needing<br class="m"> extra<br class="d"> height.
+                        Approx. 4.3" zone.</p>
+                </article>
+            </div>
+            <div class="dr">
+                <div class="vbox ph" data-label="Doctor video poster&#10;images/doctor-video-poster.jpg&#10;2:3">
+                    <!-- replace the img with <video src="..." autoplay loop muted playsinline></video> -->
+                    <img src="images/doctor-video-poster.jpg" alt="Dr. Heather H. demonstrating the pillow"
+                        onerror="this.remove()">
+                    <button id="mute" aria-label="Toggle sound"><svg viewBox="0 0 16 16">
+                            <path d="M1 6h3l4-3v10L4 10H1z" />
+                            <path id="wave" d="M10 5a4 4 0 010 6M12 3a7 7 0 010 10" fill="none" stroke="#fff"
+                                stroke-width="1.3" />
+                        </svg></button>
+                </div>
+                <div><q>“I’ve been<br class="m"> recommending<br> this to all of my<br class="m"> patients I<br
+                            class="d"> love the<br class="m"> functionality of<br> this pillow. Mellow<br class="m"> did
+                        a<br class="d"> great job<br class="m"> creating this!”</q>
+                    <h4>Dr. Heather H.</h4><small>Registered<br class="m"> Chiropractor</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <section class="ergo">
+        <div class="ei">
+            <h2>Ergonomic Support<br class="m"> That Adapts to<br class="m"> How You Sleep</h2>
+            <div class="cards">
+                <article>
+                    <div class="ph" data-label="Side sleeper&#10;images/sleeper-side.jpg&#10;1:1 square"><img
+                            src="images/sleeper-side.jpg" alt="Side sleeper" onerror="this.remove()"></div>
+                    <h3>Side</h3>
+                    <p>Side wings ease shoulder pressure.<br class="m"> The Lift Side addsneck height.</p>
+                </article>
+                <article>
+                    <div class="ph" data-label="Stomach sleeper&#10;images/sleeper-stomach.jpg&#10;1:1 square"><img
+                            src="images/sleeper-stomach.jpg" alt="Stomach sleeper" onerror="this.remove()"></div>
+                    <h3>Stomach</h3>
+                    <p>The Soft Side’s lower profile keeps your<br class="m"> head relaxed with minimal elevation.</p>
+                </article>
+                <article>
+                    <div class="ph" data-label="Back sleeper&#10;images/sleeper-back.jpg&#10;1:1 square"><img
+                            src="images/sleeper-back.jpg" alt="Back sleeper" onerror="this.remove()"></div>
+                    <h3>Back</h3>
+                    <p>The Soft Side cradles your head at a<br class="m"> gentle height for neutral alignment.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review section-->
+    <section class="rvw">
+        <div class="ri">
+            <h2>The Kind of Reviews<br class="m"> You Dream Of</h2>
+            <div class="sum">
+                <div class="sst">★★★★★</div>
+                <div class="rrow"><b>4.8/5</b><a href="#">(50,134 Reviews)</a></div>
+                <div class="bars"><span class="bs">★★★★★</span><span class="tk"><b style="width:92%"></b></span><span
+                        class="ct">(45, 295)</span><span class="bs">★★★★☆</span><span class="tk"><b
+                            style="width:16%"></b></span><span class="ct">(3, 581)</span><span
+                        class="bs">★★★☆☆</span><span class="tk"><b style="width:7%"></b></span><span
+                        class="ct">(379)</span><span class="bs">★★☆☆☆</span><span class="tk"><b
+                            style="width:7%"></b></span><span class="ct">(335)</span><span class="bs">★☆☆☆☆</span><span
+                        class="tk"><b style="width:7%"></b></span><span class="ct">(708)</span></div>
+            </div>
+            <div class="gal">
+                <div class="tile ph" data-label="Photo 1&#10;review-gallery-1.jpg"><img
+                        src="images/review-gallery-1.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 2&#10;review-gallery-2.jpg"><img
+                        src="images/review-gallery-2.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 3&#10;review-gallery-3.jpg"><img
+                        src="images/review-gallery-3.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 4&#10;review-gallery-4.jpg"><img
+                        src="images/review-gallery-4.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 5&#10;review-gallery-5.jpg"><img
+                        src="images/review-gallery-5.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 6&#10;review-gallery-6.jpg"><img
+                        src="images/review-gallery-6.jpg" alt="" onerror="this.remove()"></div>
+                <div class="tile ph" data-label="Photo 7&#10;review-gallery-7.jpg"><img
+                        src="images/review-gallery-7.jpg" alt="" onerror="this.remove()"><span class="play"></span>
+                </div>
+                <div class="tile ph" data-label="Photo 8&#10;review-gallery-8.jpg"><img
+                        src="images/review-gallery-8.jpg" alt="" onerror="this.remove()"></div>
+            </div>
+            <div class="ctl"><label class="srt"><select aria-label="Sort reviews">
+                        <option>Sort By: Featured</option>
+                        <option>Sort By: Newest</option>
+                        <option>Sort By: Highest Rated</option>
+                        <option>Sort By: Lowest Rated</option>
+                    </select></label><button class="wr">Write A Review</button></div>
+            <div class="rvs">
+                <article class="rv tight sf">
+                    <div class="rt">
+                        <div class="rs">★★★★★</div>
+                        <div class="rtl">Amazing</div>
+                        <p class="rbd"><span class="td">I just purchased another! This is such an amazing
+                                pillow.</span><span class="tm">I just purchased another! This is such<br> an amazing
+                                pillow.</span></p>
+                    </div>
+                    <div class="rimg ph" data-label="Review photo 1&#10;images/review-photo-1.jpg"><img
+                            src="images/review-photo-1.jpg" alt="" onerror="this.remove()"></div>
+                    <div class="who">
+                        <h4>Stephanie K.</h4>
+                        <div class="ver"><svg viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" fill="#4f3f85" />
+                                <path d="M4.5 8.2l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="1.8" fill="none" />
+                            </svg>Verified Buyer</div>
+                    </div>
+                    <dl class="meta">
+                        <div class="g">
+                            <dt>Biggest sleep concern</dt>
+                            <dd>Neck &amp; Shoulder Pain, Body Aches</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Did it help with your sleep concerns?</dt>
+                            <dd>Yes, completely</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Would you recommend it?</dt>
+                            <dd>Yes</dd>
+                        </div>
+                    </dl>
+                    <div class="sl">
+                        <div class="q">How did you sleep?</div>
+                        <div class="trk"><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="lb"><span>Not a wink</span><span>Like a baby</span></div>
+                    </div>
+                </article>
+                <article class="rv sf">
+                    <div class="rt">
+                        <div class="rs">★★★★★</div>
+                        <div class="rtl">Stays cool all night</div>
+                        <p class="rbd"><span class="td">It stays cool all night and gives great support for the neck.
+                                Super comfortable and just the<br> right height for me. I loved it so much I got another
+                                one for my mom!</span><span class="tm">It stays cool all night and gives great<br>
+                                support for the neck. Super<br> comfortable and just the right height<br> for me. I
+                                loved it so much I got<br> another one for my mom!</span></p>
+                    </div>
+                    <div class="rimg ph" data-label="Review photo 2&#10;images/review-photo-2.jpg"><img
+                            src="images/review-photo-2.jpg" alt="" onerror="this.remove()"></div>
+                    <div class="who">
+                        <h4>Emma C.</h4>
+                        <div class="ver"><svg viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" fill="#4f3f85" />
+                                <path d="M4.5 8.2l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="1.8" fill="none" />
+                            </svg>Verified Buyer</div>
+                    </div>
+                    <dl class="meta">
+                        <div class="g">
+                            <dt>Biggest sleep concern</dt>
+                            <dd>Hot Sleeping / Night Sweats</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Did it help with your sleep concerns?</dt>
+                            <dd>Yes, completely</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Would you recommend it?</dt>
+                            <dd>Yes</dd>
+                        </div>
+                    </dl>
+                    <div class="sl">
+                        <div class="q">How did you sleep?</div>
+                        <div class="trk"><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="lb"><span>Not a wink</span><span>Like a baby</span></div>
+                    </div>
+                </article>
+                <article class="rv">
+                    <div class="rt">
+                        <div class="rs">★★★★★</div>
+                        <div class="rtl">Stays cool all night</div>
+                        <p class="rbd"><span class="td">Absolutely love it! It’s big, super soft, and honestly way
+                                better than the cervical pillow I was<br> originally planning to get. It still supports
+                                my neck, but feels much gentler and looks so much<br> nicer too. Total
+                                upgrade!</span><span class="tm">Absolutely love it! It’s big, super soft,<br> and
+                                honestly way better than the<br> cervical pillow I was originally<br> planning to get.
+                                It still supports my<br> neck, but feels much gentler and loo…</span></p><a href="#"
+                            class="more">Read More</a>
+                    </div>
+                    <div class="rimg ph" data-label="Review photo 3&#10;images/review-photo-3.jpg"><img
+                            src="images/review-photo-3.jpg" alt="" onerror="this.remove()"></div>
+                    <div class="who">
+                        <h4>Jessica L.</h4>
+                        <div class="ver"><svg viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" fill="#4f3f85" />
+                                <path d="M4.5 8.2l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="1.8" fill="none" />
+                            </svg>Verified Buyer</div>
+                    </div>
+                    <dl class="meta">
+                        <div class="g">
+                            <dt>Biggest sleep concern</dt>
+                            <dd>Hot Sleeping / Night Sweats</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Did it help with your sleep concerns?</dt>
+                            <dd>Yes, completely</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Would you recommend it?</dt>
+                            <dd>Yes</dd>
+                        </div>
+                    </dl>
+                    <div class="sl">
+                        <div class="q">How did you sleep?</div>
+                        <div class="trk"><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="lb"><span>Not a wink</span><span>Like a baby</span></div>
+                    </div>
+                </article>
+                <article class="rv">
+                    <div class="rt">
+                        <div class="rs">★★★★★</div>
+                        <div class="rtl">Just love it!</div>
+                        <p class="rbd"><span class="td">I love this! I use it all around my home. I sleep on it, and
+                                sometimes I even use it as a back<br> cushion on sofa.</span><span class="tm">I love
+                                this! I use it all around my home.<br> I sleep on it, and sometimes I even use<br> it as
+                                a back cushion on sofa.</span></p>
+                    </div>
+                    <div class="rimg ph" data-label="Review photo 4&#10;images/review-photo-4.jpg"><img
+                            src="images/review-photo-4.jpg" alt="" onerror="this.remove()"></div>
+                    <div class="who">
+                        <h4>Emily P.</h4>
+                        <div class="ver"><svg viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" fill="#4f3f85" />
+                                <path d="M4.5 8.2l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="1.8" fill="none" />
+                            </svg>Verified Buyer</div>
+                    </div>
+                    <dl class="meta">
+                        <div class="g">
+                            <dt>Biggest sleep concern</dt>
+                            <dd>Hot Sleeping / Night Sweats</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Did it help with your sleep concerns?</dt>
+                            <dd>Yes, completely</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Would you recommend it?</dt>
+                            <dd>Yes</dd>
+                        </div>
+                    </dl>
+                    <div class="sl">
+                        <div class="q">How did you sleep?</div>
+                        <div class="trk"><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="lb"><span>Not a wink</span><span>Like a baby</span></div>
+                    </div>
+                </article>
+                <article class="rv">
+                    <div class="rt">
+                        <div class="rs">★★★★★</div>
+                        <div class="rtl">Just love it!</div>
+                        <p class="rbd"><span class="td">Honestly this is better than I expected. I kept seeing all the
+                                videos everyone saying they love it<br> so I had to try it. I’ve purchased 4 in total
+                                and can’t wait to gift them this year! If you haven’t<br> tried the comforter I highly
+                                recommend that as well.</span><span class="tm">Honestly this is better than I<br>
+                                expected. I kept seeing all the videos<br> everyone saying they love it so I had<br> to
+                                try it. I’ve purchased 4 in total and<br> can’t wait to gift them this year! If
+                                yo…</span></p><a href="#" class="more">Read More</a>
+                    </div>
+                    <div class="rimg ph" data-label="Review photo 5&#10;images/review-photo-5.jpg"><img
+                            src="images/review-photo-5.jpg" alt="" onerror="this.remove()"></div>
+                    <div class="who">
+                        <h4>Brooke S.</h4>
+                        <div class="ver"><svg viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" fill="#4f3f85" />
+                                <path d="M4.5 8.2l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="1.8" fill="none" />
+                            </svg>Verified Buyer</div>
+                    </div>
+                    <dl class="meta">
+                        <div class="g">
+                            <dt>Biggest sleep concern</dt>
+                            <dd>Hot Sleeping / Night Sweats</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Did it help with your sleep concerns?</dt>
+                            <dd>Yes, completely</dd>
+                        </div>
+                        <div class="g">
+                            <dt>Would you recommend it?</dt>
+                            <dd>Yes</dd>
+                        </div>
+                    </dl>
+                    <div class="sl">
+                        <div class="q">How did you sleep?</div>
+                        <div class="trk"><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="lb"><span>Not a wink</span><span>Like a baby</span></div>
+                    </div>
+                </article>
+            </div>
+            <div class="pg"><button class="ar" aria-label="Previous">‹</button><button
+                    class=on>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button
+                    class="ar" aria-label="Next">›</button></div>
+        </div>
+    </section>
+    <section class="mat">
+        <div class="mi">
+            <h2>Premium Materials,<br class="m"> Smart Technology</h2>
+            <div class="mcs">
+                <article>
+                    <div class="ph"
+                        data-label="SwitchFit™ Dual-Height System&#10;images/material-dual-height.jpg&#10;1:1 square">
+                        <img src="images/material-dual-height.jpg" alt="SwitchFit™ Dual-Height System"
+                            onerror="this.remove()">
+                    </div>
+                    <h3>SwitchFit™ Dual-Height System</h3>
+                    <p>One side higher, one side lower. Flip to<br class="m"> match your sleep position.</p>
+                </article>
+                <article>
+                    <div class="ph" data-label="CloudSoft Core&#10;images/material-core.jpg&#10;1:1 square"><img
+                            src="images/material-core.jpg" alt="CloudSoft Core" onerror="this.remove()"></div>
+                    <h3>CloudSoft Core</h3>
+                    <p>Shape-retaining memory foam, built for<br class="m"> lasting support.</p>
+                </article>
+                <article>
+                    <div class="ph" data-label="OEKO-TEX® Certified Cover&#10;images/material-cover.jpg&#10;1:1 square">
+                        <img src="images/material-cover.jpg" alt="OEKO-TEX® Certified Cover" onerror="this.remove()">
+                    </div>
+                    <h3>OEKO-TEX® Certified Cover</h3>
+                    <p>Hypoallergenic, breathable and gentle on<br class="m"> skin. Cover sold separately.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        $("#mute").onclick = () => { const w = $("#wave"), v = $(".vbox video"); const off = w.style.display !== "none"; w.style.display = off ? "none" : ""; if (v) v.muted = off };
+        const colors = [["White", "#ffffff"], ["Gray", "#bfc0c6"], ["Blue", "#a9cdf0"], ["Pink", "#ffb3cb"], ["Lavender", "#d3c2d9"], ["Sage", "#a7bf9d"], ["Navy", "#1b1f6b"], ["Charcoal", "#444444"], ["Cream", "#fcefc9"]];
+        const fmt = n => "$" + n.toFixed(2);
+
+        /* gallery */
+        const tints = ["#f1e6e4", "#e8d6d3", "#d9d6f2", "#efe3d4", "#c9c4ee", "#f4e8e0", "#f0d9d0", "#a79fd8", "#efe7e4", "#e6dcec"];
+        const thumbs = $("#thumbs"); let cur = 0;
+        tints.forEach((t, i) => { const b = document.createElement("button"); b.className = "th"; b.style.setProperty("--g", i ? `linear-gradient(135deg,${t},#fff8)` : "#f1e6e4"); b.setAttribute("aria-label", "Image " + (i + 1)); b.onclick = () => show(i); thumbs.appendChild(b) });
+        function show(i) {
+            cur = (i + tints.length) % tints.length; $$(".th").forEach((e, k) => e.classList.toggle("on", k === cur));
+            $("#stage").style.background = tints[cur]; $("#pillow").style.display = cur ? "none" : "block";
+            const a = $("#alt"); a.style.display = cur ? "block" : "none"; a.textContent = "Image " + (cur + 1)
+        }
+        $("#prev").onclick = () => show(cur - 1); $("#next").onclick = () => show(cur + 1); show(0);
+
+        /* colors */
+        const sws = $("#swatches");
+        colors.forEach(([n, c], i) => {
+            const b = document.createElement("button"); b.className = "sw" + (i ? "" : " on"); b.dataset.c = n; b.style.background = c; b.title = n; b.setAttribute("aria-label", n);
+            b.onclick = () => { $$(".sw").forEach(e => e.classList.remove("on")); b.classList.add("on"); $("#cname").textContent = n; $("#pillow").style.setProperty("--pillow", c); $("#pillow").style.setProperty("--pillow", c === "#ffffff" ? "#fff" : c) }; sws.appendChild(b)
+        });
+        $$(".cs").forEach(s => { colors.forEach(([n]) => s.add(new Option(n, n))); const d = s.parentNode.querySelector(".dot"); const up = () => d.style.background = colors.find(c => c[0] === s.value)[1]; s.onchange = up; up() });
+
+        /* sizes */
+        $$(".sz").forEach(b => b.onclick = () => {
+            $$(".sz").forEach(e => e.classList.remove("on")); b.classList.add("on");
+            $(".sizeRow .lbl").innerHTML = "<b>Size:</b> " + (b.textContent === "Regular" ? "Regular (If under 5'7 Tall)" : "High (If 5'7 Tall or over)")
+        });
+
+        /* bundles / cart */
+        let n = 2;
+        function cart() {
+            const cs = $("#case").checked; let p, o;
+            if (n == 1) { p = 49.99; o = 100 } else if (n == 2) { p = 88.89 + (cs ? 19.99 : 0); o = 200 + (cs ? 39.98 : 0) } else { p = 151.99; o = 400 }
+            $("#cart").innerHTML = `Add to Cart – ${fmt(p)} <s>${fmt(o)}</s>`
+        }
+        $$(".bd").forEach(b => $(".bd-h", b).onclick = () => { n = +b.dataset.n; $$(".bd").forEach(e => e.classList.toggle("on", e === b)); cart() });
+        $("#case").onchange = cart; cart();
+
+        /* accordions */
+        $$(".acc button").forEach(b => b.onclick = () => { const a = b.parentNode; a.classList.toggle("open"); $("i", b).textContent = a.classList.contains("open") ? "–" : "+" });
+
+        /* video tiles */
+        const vg = ["linear-gradient(135deg,#d8c6c0,#7a6258)", "linear-gradient(135deg,#f3b6c9,#d06a8a)", "linear-gradient(135deg,#d9d1c8,#8d7b6a)", "linear-gradient(135deg,#d8c6c0,#7a6258)"];
+        ["vids1", "vids2"].forEach(id => { $("#" + id).innerHTML = vg.map(g => `<div class="vid" style="--g:${g}"><b>↗</b></div>`).join("") });
+
+        /* testimonials */
+        const T = [["I didn’t realize how bad my old pillow was until I tried this. The shape, the feel, the support, everything is just right. My husband stole mine so now we have two!", "Jodi Lynn"], ["Finally a pillow that keeps my neck aligned all night. I wake up with zero stiffness.", "Maria S."], ["Stays cool even in summer and the dual height is genius for side sleeping.", "Daniel K."], ["Softest pillow I have ever owned. The cooling cover is a bonus.", "Priya R."], ["Bought one, then ordered four for the whole family. Worth every penny.", "Chris T."]];
+        const dots = $("#dots"); let ti = 0;
+        T.forEach((_, i) => { const d = document.createElement("i"); d.onclick = () => setT(i); dots.appendChild(d) });
+        function setT(i) { ti = i; $("#tq").textContent = "“" + T[i][0] + "”"; $("#tn").textContent = T[i][1]; $$("i", dots).forEach((d, k) => d.classList.toggle("on", k === i)) }
+        setT(0); setInterval(() => setT((ti + 1) % T.length), 6000);
+
+        /* frequently bought together */
+        const F = [["Temperature Controlling Comforter", 119.99, 179.99, "linear-gradient(135deg,#e9d8df,#cdb3c3)", "From", true], ["Cooling EasyFit Sheet", 29.99, 44.99, "linear-gradient(135deg,#efefef,#d7d7e6)", "From", false], ["Cloud Throw Blanket", 59.99, 89.99, "linear-gradient(135deg,#e6dcec,#b9aedc)", "From", false]];
+        const fl = $("#fl"), fc = $("#fc");
+        F.forEach((f, i) => {
+            fl.insertAdjacentHTML("beforeend", `<div class="fl"><input type="checkbox" class="chk fb" data-i="${i}" ${f[5] ? "checked" : ""}><div><b>${f[0]}</b><span>${f[4]} ${fmt(f[1])}<s>${fmt(f[2])}</s></span></div></div>`);
+            fc.insertAdjacentHTML("beforeend", `<div class="fc"><div class="im" style="--g:${f[3]}"><input type="checkbox" class="chk fb" data-i="${i}" ${f[5] ? "checked" : ""}></div><div class="rt"><span>★★★★★</span>(88,888)</div><h5>${f[0]}</h5><div class="mini">${colors.slice(3, 5).concat(colors.slice(1, 2), colors.slice(2, 3), colors.slice(4, 5)).map(c => `<i style="background:${c[1]};border:1px solid #d9d6e8"></i>`).join("")}</div><div class="sel sel-s"><select><option>Twin / Twin XL</option><option>Full / Queen</option><option>King</option></select></div></div>`)
+        });
+        function fb() {
+            let p = 0, o = 0; const on = new Set($$(".fb:checked").map(e => +e.dataset.i)); on.forEach(i => { p += F[i][1]; o += F[i][2] });
+            $$(".fb").forEach(e => e.checked = on.has(+e.dataset.i));
+            $("#fcta").innerHTML = `Select Products – ${fmt(p)} <s>${fmt(o)}</s>`
+        }
+        $$(".fb").forEach(e => e.onchange = fb); fb();
+        $$(".pg button").forEach(b => b.onclick = () => { const n = $$(".pg button:not(.ar)"), i = n.findIndex(x => x.classList.contains("on")); let t = b.classList.contains("ar") ? (b.getAttribute("aria-label") === "Next" ? i + 1 : i - 1) : n.indexOf(b); t = Math.max(0, Math.min(n.length - 1, t)); n.forEach((x, k) => x.classList.toggle("on", k === t)) });
+    </script>
+
+    <!-- FAQ Section Rest Easy, We've Got Answers -->
+    <section class="faq">
+
+        <!-- Image: left on desktop, bottom on mobile -->
+        <div class="faq__media">
+            <img class="faq__image" alt="">
+        </div>
+
+        <!-- Content: right on desktop, top on mobile -->
+        <div class="faq__content">
+            <h2 class="faq__title">Rest Easy, We’ve Got Answers</h2>
+            <p class="faq__subtitle">Everything you need to know before you buy.</p>
+
+            <div class="faq__list">
+
+                <details class="faq__item">
+                    <summary class="faq__question">
+                        <span class="faq__question-text">Will this actually work for me?</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq__answer">
+                        <p class="faq__answer-text">Add your answer here.</p>
+                    </div>
+                </details>
+
+                <details class="faq__item">
+                    <summary class="faq__question">
+                        <span class="faq__question-text">Do you offer free shipping?</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq__answer">
+                        <p class="faq__answer-text">Add your answer here.</p>
+                    </div>
+                </details>
+
+                <details class="faq__item">
+                    <summary class="faq__question">
+                        <span class="faq__question-text">What if the product doesn’t fit my needs?</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq__answer">
+                        <p class="faq__answer-text">Add your answer here.</p>
+                    </div>
+                </details>
+
+                <details class="faq__item">
+                    <summary class="faq__question">
+                        <span class="faq__question-text">Are your products safe/non-toxic?</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq__answer">
+                        <p class="faq__answer-text">Add your answer here.</p>
+                    </div>
+                </details>
+
+                <!-- Desktop only -->
+                <details class="faq__item faq__item--desktop-only">
+                    <summary class="faq__question">
+                        <span class="faq__question-text">Do you ship internationally?</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq__answer">
+                        <p class="faq__answer-text">Add your answer here.</p>
+                    </div>
+                </details>
+
+            </div>
+
+            <a class="faq__button" href="/faqs">Read All FAQs</a>
+        </div>
+
+    </section>
+
+    <!--complete your sleep routine section-->
+    <section class="routine" aria-labelledby="routine-title">
+        <div class="routine__head">
+            <h2 id="routine-title" class="routine__title">Complete your <br class="br-m">Sleep Routine</h2>
+
+            <!-- Desktop: text filters -->
+            <nav class="routine__filters" aria-label="Filter by concern">
+                <span class="routine__filters-label">Concern:</span>
+                <ul id="filterList" class="routine__filters-list"></ul>
+                <a href="/collections/all" class="routine__filters-all">Shop All</a>
+            </nav>
+
+            <!-- Mobile / tablet: dropdown -->
+            <div class="routine__select">
+                <label for="concernSelect" class="sr-only">Concern</label>
+                <select id="concernSelect"></select>
+                <svg class="routine__chev" width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true">
+                    <path d="M1.5 1.5 8 8l6.5-6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+
+        <div id="productGrid" class="routine__grid"></div>
+
+        <a href="/collections/all" class="routine__shop-all">Shop All Products</a>
+    </section>
+
+    <script>
+        (function () {
+            // ----- Data: replace image paths / links with your real assets -----
+            const CONCERNS = ["Neck & Shoulder Pain", "Hot Sleeping", "Body Aches", "Stain Protection"];
+
+            const PRODUCTS = [
+                {
+                    name: "MellowFlip Pillow", shortName: "Flip Pillow",
+                    img: "img/mellowflip-desktop.jpg", imgMobile: "img/flip-mobile.jpg",
+                    badge: "Chiropractor Approved", // desktop-only for this card
+                    badgeMobile: null,
+                    colors: ["#bcd3ee"],
+                    desc: "A dual-sided memory foam pillow. One side firm, one side soft.",
+                    price: 88, oldPrice: null, url: "/products/mellowflip-pillow",
+                    concerns: ["Neck & Shoulder Pain", "Body Aches"]
+                },
+                {
+                    name: "Puff Pillow", shortName: "Puff Pillow",
+                    img: "img/puff-desktop.jpg", imgMobile: "img/puff-mobile.jpg",
+                    colors: ["#f4b6bd", "#ffffff", "#9b9b9b", "#c9a6d8", "#bcd3ee"],
+                    desc: "Quilted design, cooling to the touch, and a cloud-like fill.",
+                    price: 88, oldPrice: null, url: "/products/puff-pillow",
+                    concerns: ["Neck & Shoulder Pain", "Hot Sleeping"]
+                },
+                {
+                    name: "BodyAlign™ Pillow", shortName: "BodyAlign Plus+ Cooling Pillow",
+                    img: "img/bodyalign.jpg", imgMobile: "img/bodyalign.jpg",
+                    badge: "Orthopedist Approved", badgeMobile: "Orthopedist Approved",
+                    colors: ["#b9c9b4", "#9b9b9b", "#bcd3ee"],
+                    desc: "Supports alignment, relieves neck and shoulder pressure.",
+                    descMobile: "Cushions your arms, hips, and knees so you wake up ache-free.",
+                    price: 80, oldPrice: 88, url: "/products/bodyalign-pillow",
+                    concerns: ["Neck & Shoulder Pain", "Body Aches", "Hot Sleeping"]
+                },
+                {
+                    name: "Mellow x AVIO Travel Neck Pillow", shortName: "Mellow x AVIO Travel Neck Pillow",
+                    img: "img/avio.jpg", imgMobile: "img/avio.jpg",
+                    colors: ["#f1e6d6", "#9b9b9b", "#222222", "#bcd3ee"],
+                    desc: "Cloud-soft support without the bulk of traditional travel pillows.",
+                    price: 80, oldPrice: 88, desktopPrice: 88, desktopOld: null, url: "/products/avio-travel-neck-pillow",
+                    concerns: ["Neck & Shoulder Pain"]
+                }
+            ];
+
+            const laurel = `<svg viewBox="0 0 20 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M10 26C4 22 2 15 4 6M4 6c3 1 4 3 4 5M3.5 12c3 0 4.5 2 4.5 4M5 18c2.500.5 3.500 2 3.500 4"/></svg>`;
+            const star = `<svg viewBox="0 0 24 24"><path d="m12 2 3 6.900 7.500.7-5.700 5 1.700 7.400L12 18l-6.500 4 1.700-7.400-5.700-5L9 8.900z"/></svg>`;
+
+            const filterList = document.getElementById("filterList");
+            const select = document.getElementById("concernSelect");
+            const grid = document.getElementById("productGrid");
+            let active = CONCERNS[0];
+
+            const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+            function priceHTML(p) {
+                return `<span>Shop <span class="now">Now </span>– $${p.price}</span>` +
+                    (p.oldPrice ? `<s>$${p.oldPrice}</s>` : "");
+            }
+
+            function cardHTML(p) {
+                const badge = p.badge
+                    ? `<div class="card__badge">${laurel}<span>${esc(p.badge).replace(" Approved", "<br>Approved")}</span>${laurel.replace("<svg", '<svg style="transform:scaleX(-1)"')}</div>`
+                    : "";
+                return `
+    <article class="card">
+      <div class="card__media">
+        <picture>
+          <source media="(min-width:1024px)" srcset="${p.img}">
+          <img src="${p.imgMobile || p.img}" alt="${esc(p.name)}" loading="lazy">
+        </picture>
+        ${badge}
+      </div>
+      <div class="card__rating">
+        <span class="card__stars" aria-label="5 out of 5 stars">${star.repeat(5)}</span>
+        <span>(88,888)</span>
+      </div>
+      <h3 class="card__name"><span class="long">${esc(p.name)}</span><span class="short">${esc(p.shortName)}</span></h3>
+      <div class="card__swatches">
+        ${p.colors.map((c, i) => `<button class="swatch" style="--c:${c}" aria-label="Color ${i + 1}" aria-pressed="${i === 0}"></button>`).join("")}
+      </div>
+      <p class="card__desc">${esc(p.descMobile || p.desc)}</p>
+      <a class="card__btn" href="${p.url}">${priceHTML(p)}</a>
+    </article>`;
+            }
+
+            function render() {
+                const items = PRODUCTS.filter((p) => p.concerns.includes(active));
+                grid.innerHTML = items.map(cardHTML).join("");
+            }
+
+            function setActive(c) {
+                active = c;
+                select.value = c;
+                filterList.querySelectorAll("button").forEach((b) =>
+                    b.setAttribute("aria-current", String(b.dataset.concern === c)));
+                render();
+            }
+
+            // Build filters
+            CONCERNS.forEach((c) => {
+                const li = document.createElement("li");
+                li.innerHTML = `<button type="button" data-concern="${esc(c)}">${esc(c)}</button>`;
+                filterList.appendChild(li);
+                select.add(new Option("Concern: " + c, c));
+            });
+            filterList.addEventListener("click", (e) => {
+                const b = e.target.closest("button[data-concern]");
+                if (b) setActive(b.dataset.concern);
+            });
+            select.addEventListener("change", () => setActive(select.value));
+
+            // Swatch selection
+            grid.addEventListener("click", (e) => {
+                const s = e.target.closest(".swatch");
+                if (!s) return;
+                s.parentElement.querySelectorAll(".swatch").forEach((x) => x.setAttribute("aria-pressed", "false"));
+                s.setAttribute("aria-pressed", "true");
+            });
+
+            setActive(active);
+        })();
+
+    </script>
+
+    //Footer end section
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+
+            <div class="site-footer__top">
+
+                <!-- Link columns (accordion on mobile) -->
+                <nav class="site-footer__nav" aria-label="Footer">
+
+                    <div class="site-footer__col is-open">
+                        <h3 class="site-footer__heading">
+                            <button class="site-footer__toggle" type="button" aria-expanded="true"
+                                aria-controls="footer-shop">
+                                Shop
+                                <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true">
+                                    <line x1="0" y1="7" x2="14" y2="7" />
+                                    <line class="v" x1="7" y1="0" x2="7" y2="14" />
+                                </svg>
+                            </button>
+                        </h3>
+                        <div class="site-footer__panel" id="footer-shop">
+                            <div class="site-footer__list-wrap">
+                                <ul class="site-footer__links">
+                                    <li><a href="#">Pillows</a></li>
+                                    <li><a href="#">Bedding</a></li>
+                                    <li><a href="#">Bath &amp; Robe</a></li>
+                                    <li><a href="#">Accessories</a></li>
+                                    <li><a href="#">Bundles</a></li>
+                                    <li><a href="#">Shop All</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="site-footer__col">
+                        <h3 class="site-footer__heading">
+                            <button class="site-footer__toggle" type="button" aria-expanded="false"
+                                aria-controls="footer-learn">
+                                Learn
+                                <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true">
+                                    <line x1="0" y1="7" x2="14" y2="7" />
+                                    <line class="v" x1="7" y1="0" x2="7" y2="14" />
+                                </svg>
+                            </button>
+                        </h3>
+                        <div class="site-footer__panel" id="footer-learn">
+                            <div class="site-footer__list-wrap">
+                                <ul class="site-footer__links">
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="#">News</a></li>
+                                    <li><a href="#">Wholesale</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="site-footer__col">
+                        <h3 class="site-footer__heading">
+                            <button class="site-footer__toggle" type="button" aria-expanded="false"
+                                aria-controls="footer-community">
+                                Community
+                                <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true">
+                                    <line x1="0" y1="7" x2="14" y2="7" />
+                                    <line class="v" x1="7" y1="0" x2="7" y2="14" />
+                                </svg>
+                            </button>
+                        </h3>
+                        <div class="site-footer__panel" id="footer-community">
+                            <div class="site-footer__list-wrap">
+                                <ul class="site-footer__links">
+                                    <li><a href="#">Ambassadors</a></li>
+                                    <li><a href="#">Instagram</a></li>
+                                    <li><a href="#">Facebook</a></li>
+                                    <li><a href="#">Tiktok</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="site-footer__col">
+                        <h3 class="site-footer__heading">
+                            <button class="site-footer__toggle" type="button" aria-expanded="false"
+                                aria-controls="footer-support">
+                                Support
+                                <svg class="site-footer__icon" viewBox="0 0 14 14" aria-hidden="true">
+                                    <line x1="0" y1="7" x2="14" y2="7" />
+                                    <line class="v" x1="7" y1="0" x2="7" y2="14" />
+                                </svg>
+                            </button>
+                        </h3>
+                        <div class="site-footer__panel" id="footer-support">
+                            <div class="site-footer__list-wrap">
+                                <ul class="site-footer__links">
+                                    <li><a href="#">Tracking</a></li>
+                                    <li><a href="#">Lifetime Warranty</a></li>
+                                    <li><a href="#">Shipping &amp; Returns</a></li>
+                                    <li><a href="#">Account</a></li>
+                                    <li><a href="#">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </nav>
+
+                <!-- Newsletter card -->
+                <section class="site-footer__news" aria-labelledby="footer-news-title">
+                    <!-- Replace with your cut-out photo (transparent PNG / WebP) -->
+                    <img class="site-footer__news-img" src="images/footer-newsletter.png" alt="" loading="lazy"
+                        onerror="this.style.display='none'">
+
+                    <h2 class="site-footer__news-title" id="footer-news-title">Join the Mellow Community</h2>
+                    <p class="site-footer__news-text">Get first access to new drops,<br>restocks, and sleep tips.</p>
+
+                    <form class="site-footer__form" action="#" method="post">
+                        <span class="site-footer__field-bar" aria-hidden="true"></span>
+                        <input class="site-footer__input" type="email" name="email" placeholder="Your email address"
+                            aria-label="Email address" required>
+                        <button class="site-footer__submit" type="submit" aria-label="Subscribe">
+                            <svg viewBox="0 0 21 14" aria-hidden="true">
+                                <line x1="1" y1="7" x2="19.5" y2="7" />
+                                <polyline points="13.5 1 19.5 7 13.5 13" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="site-footer__social">
+                        <a href="#" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 1.8A4 4 0 0 0 3.8 7.8v8.4a4 4 0 0 0 4 4h8.4a4 4 0 0 0 4-4V7.8a4 4 0 0 0-4-4H7.8Zm8.9 1.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 6.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2Zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Z" />
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7h1.6V3.8s-1.3-.2-2.6-.2c-2.6 0-4.3 1.6-4.3 4.4v2.5H7v3.3h3V22h3.5Z" />
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="TikTok">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M16.6 2h-3.2v13.3a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1V9.3a6 6 0 1 0 5.2 5.9V8.6a7.2 7.2 0 0 0 4.2 1.4V6.8a4.2 4.2 0 0 1-4.2-4.8Z" />
+                            </svg>
+                        </a>
+                        <a class="site-footer__tag" href="#">#MellowSleep</a>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Big wordmark (replace with your logo SVG if you have one) -->
+            <svg class="site-footer__wordmark" viewBox="0 0 1188 262" role="img" aria-label="mellow">
+                <text x="0" y="256" textLength="1188" lengthAdjust="spacingAndGlyphs"
+                    font-family="Figtree, Arial, sans-serif" font-weight="800" font-size="346" fill="#8479AA">mel<tspan
+                        fill="#675B9B">l</tspan>ow</text>
+            </svg>
+
+            <!-- Legal line -->
+            <p class="site-footer__legal">
+                <span>© 2026, Mellow LLC. Site by <a href="#">Otherhalf</a></span>
+                <span class="site-footer__dot" aria-hidden="true">•</span>
+                <a href="#">Privacy Policy</a>
+                <span class="site-footer__dot" aria-hidden="true">•</span>
+                <a href="#">Shipping Policy</a>
+                <span class="site-footer__dot" aria-hidden="true">•</span>
+                <a href="#">Terms of Service</a>
+                <span class="site-footer__dot" aria-hidden="true">•</span>
+                <a href="#">Data Disclosure</a>
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+
+</html>
